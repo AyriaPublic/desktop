@@ -1,0 +1,22 @@
+.list-steamapps {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+}
+
+.list-steamapps figure {
+    position: relative;
+}
+
+.list-steamapps img {
+    width: 30em;
+}
+
+.list-steamapps figcaption {
+    bottom: 1em;
+    color: white;
+    font-family: sans-serif;
+    font-size: 2em;
+    left: 1em;
+    position: absolute;
+}

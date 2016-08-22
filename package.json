@@ -1,0 +1,40 @@
+{
+  "name": "ayria-desktop",
+  "version": "0.0.0",
+  "description": "GUI Electron app for the Ayria Network Platform.",
+  "keywords": [
+    "Ayria",
+    "Ayria Desktop",
+    "Electron"
+  ],
+  "homepage": "https://github.com/AyriaPublic/ayria-desktop",
+  "bugs": "https://github.com/AyriaPublic/ayria-desktop/issues",
+  "license": "GPL-3.0",
+  "author": "Selwyn <talk@selwyn.cc> (https://selwyn.cc/)",
+  "main": "src/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AyriaPublic/ayria-desktop.git"
+  },
+  "scripts": {
+    "start": "run-p --silent electron watch",
+    "test": "",
+    "preversion": "npm test",
+    "postversion": "git push",
+    "electron": "electron .",
+    "lint": "eslint src/**/*.js",
+    "watch": "watch \"npm run test && npm run lint\" src"
+  },
+  "dependencies": {
+    "JSONStream": "^1.1.4",
+    "electron": "^1.3.3",
+    "hyperquest": "^2.0.0",
+    "pify": "^2.3.0",
+    "winreg": "^1.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.2.2",
+    "npm-run-all": "^2.3.0",
+    "watch": "^0.19.2"
+  }
+}
