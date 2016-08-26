@@ -4,12 +4,14 @@ const pify = require('pify');
 const fs = pify(require('fs'));
 const path = require('path');
 
+const entries = require('object.entries');
 const hyperquest = require('hyperquest');
 const JSONStream = require('JSONStream');
+const vdf = require('vdfjs');
 const winreg = require('winreg');
 
-// Return location of installed Steam games
-const getSteamAppsPath = function () {
+// Return location of primary Steam library (installation directory)
+const getSteamInstallPath = function () {
     const steamRegistryKey = winreg({
         hive: winreg.HKCU,
         key: '\\SOFTWARE\\Valve\\Steam'
@@ -21,9 +23,37 @@ const getSteamAppsPath = function () {
                 reject(error);
             }
 
-            resolve(path.join(result.value, 'steamapps'));
+            resolve(result.value);
         });
     });
+};
+
+// Parses the `libraryfolders.vdf` config as found in the primary Steam library's steamapps directory
+const getSteamLibraryFoldersConfig = function () {
+    return getSteamInstallPath().then(steamInstall => {
+        const config = path.join(steamInstall, 'steamapps', 'libraryfolders.vdf');
+
+        return fs.readFile(config, 'utf-8').then(vdf.parse);
+    });
+};
+
+// Return location of all Steam libraries, including the installation directory
+const getSteamLibraries = function () {
+    return Promise.all([getSteamInstallPath(), getSteamLibraryFoldersConfig()])
+        .then(([steamInstall, settings]) => {
+            const folders = entries(settings['LibraryFolders'])
+                .filter(([key, _]) => key.match(/^\d+$/)) // Filter any non-numeric entries
+                .map(([_, path]) => path); // Discards key from entries
+
+            return [steamInstall].concat(folders);
+        });
+};
+
+// Return each Steam libraries' steamapps directory
+const getSteamAppsPaths = function () {
+    return getSteamLibraries().then(libraries => libraries.map(library => {
+        return path.join(library, 'steamapps');
+    }));
 };
 
 // Return array of app ID's
@@ -83,6 +113,6 @@ const renderSteamApp = function (appData) {
     gamesListElement.appendChild(appItem);
 };
 
-getSteamAppsPath()
-    .then(getSteamAppIds)
-    .then(getSteamAppInfo);
+getSteamAppsPaths()
+    .then(paths => Promise.all(paths.map(getSteamAppIds)))
+    .then(appIds => appIds.forEach(getSteamAppInfo));
