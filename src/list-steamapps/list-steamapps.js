@@ -10,7 +10,7 @@ const winreg = require('winreg');
 
 // Return location of installed Steam games
 const getSteamAppsPath = function () {
-    var steamRegistryKey = winreg({
+    const steamRegistryKey = winreg({
         hive: winreg.HKCU,
         key: '\\SOFTWARE\\Valve\\Steam'
     });
@@ -43,7 +43,7 @@ const getSteamAppIds = function (path) {
 
 // Return array of promises containing app information
 const getSteamAppInfo = function (appIds) {
-    var steamApiUrl = 'http://store.steampowered.com/api/appdetails?appids=';
+    const steamApiUrl = 'http://store.steampowered.com/api/appdetails?appids=';
 
     return Promise.all(appIds.map(function (appId) {
         return new Promise(function (resolve, reject) {
@@ -65,12 +65,12 @@ const getSteamAppInfo = function (appIds) {
 
 // Render passed object appData
 const renderSteamApp = function (appData) {
-    var gamesListElement = document.querySelector('[data-list-games]');
+    const gamesListElement = document.querySelector('[data-list-games]');
 
-    var appItem = document.createElement('li');
-    var appContainer = document.createElement('figure');
-    var appName = document.createElement('figcaption');
-    var appBackground = document.createElement('img');
+    const appItem = document.createElement('li');
+    const appContainer = document.createElement('figure');
+    const appName = document.createElement('figcaption');
+    const appBackground = document.createElement('img');
 
     // Fill in DOM nodes with data
     appName.textContent = appData.name;

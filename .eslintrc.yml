@@ -25,6 +25,8 @@ rules:
     - warn
   no-sync:
     - error
+  no-var:
+    - warn
   semi:
     - warn
     - always
