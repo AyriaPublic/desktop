@@ -5,6 +5,7 @@ const fs = pify(require('fs'));
 const path = require('path');
 
 const entries = require('object.entries');
+const envPaths = require('env-paths');
 const hyperquest = require('hyperquest');
 const JSONStream = require('JSONStream');
 const vdf = require('vdfjs');
@@ -12,6 +13,10 @@ const winreg = require('winreg');
 
 // Return location of primary Steam library (installation directory)
 const getSteamInstallPath = function () {
+    if (process.platform === 'linux') {
+        return Promise.resolve(envPaths('Steam', {suffix: ''}).data);
+    }
+
     const steamRegistryKey = winreg({
         hive: winreg.HKCU,
         key: '\\SOFTWARE\\Valve\\Steam'
