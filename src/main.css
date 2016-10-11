@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+html {
+    background: #00162d;
+}
+
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 1em;
@@ -15,14 +19,14 @@ p {
 }
 
 h1, h2, h3, h4 {
+    margin: 1.414em 0 0.5em;
     font-weight: inherit;
     line-height: 1.2;
-    margin: 1.414em 0 0.5em;
 }
 
 h1 {
-    font-size: 3.998em;
     margin-top: 0;
+    font-size: 3.998em;
 }
 
 h2 {
