@@ -40,7 +40,9 @@
   },
   "devDependencies": {
     "eslint": "^3.2.2",
+    "flat-cache": "^1.2.1",
     "npm-run-all": "^2.3.0",
+    "ramda": "^0.22.1",
     "watch": "^0.19.2"
   }
 }
