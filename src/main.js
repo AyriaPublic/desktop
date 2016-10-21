@@ -11,13 +11,17 @@ let mainWindow;
 
 // Open index.html in a new browser window
 const createWindow = function () {
-    mainWindow = new BrowserWindow();
+    mainWindow = new BrowserWindow({show: false});
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Open the DevTools when in development environment
     if (process.env.NODE_ENV) {
         mainWindow.webContents.openDevTools();
     }
+
+    mainWindow.once('ready-to-show', function () {
+      mainWindow.show();
+    });
 
     mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
