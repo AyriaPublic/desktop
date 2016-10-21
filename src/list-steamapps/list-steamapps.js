@@ -9,6 +9,7 @@ const envPaths = require('env-paths');
 const flatCache = require('flat-cache');
 const hyperquest = require('hyperquest');
 const JSONStream = require('JSONStream');
+const mkdirp = pify(require('mkdirp'));
 const R = require('ramda');
 const vdf = require('vdfjs');
 const winreg = require('winreg');
@@ -150,8 +151,7 @@ const cacheSteamappData = function (appData) {
             .on('error', function (error) {
                 // If directory doesn't exist create it and call again
                 if (error.code === 'ENOENT') {
-                    return fs.mkdir(cachePath)
-                        .then(() => fs.mkdir(backgroundPath))
+                    return mkdirp(backgroundPath)
                         .then(() => resolve(cacheSteamappData(appData)))
                         .catch(function (error) {
                             // If directory already exists call again
