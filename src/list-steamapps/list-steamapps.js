@@ -8,7 +8,6 @@ const entries = require('object.entries');
 const envPaths = require('env-paths');
 const flatCache = require('flat-cache');
 const hyperquest = require('hyperquest');
-const JSONStream = require('JSONStream');
 const mkdirp = pify(require('mkdirp'));
 const R = require('ramda');
 const vdf = require('vdfjs');
@@ -91,14 +90,17 @@ const getSteamappId = function (path) {
 // getSteamappInfo :: String -> Promise -> Object
 const getSteamappInfo = function (appId) {
     const steamApiUrl = 'http://store.steampowered.com/api/appdetails?appids=';
+    let response = [];
 
     return new Promise(function (resolve, reject) {
         hyperquest(`${steamApiUrl}${appId}&filters=basic,background`)
-          .pipe(JSONStream.parse('*'))
-          .on('data', function (response) {
-              // if response.data.background
-              if (response.success) {
-                  resolve(response.data);
+          .on('data', function (chunk) {
+              response.push(chunk);
+          })
+          .on('end', function () {
+              const result = JSON.parse(Buffer.concat(response));
+              if (result[appId].success) {
+                  resolve(result[appId].data);
               }
               reject('Steam API failed at responding.');
           })
@@ -168,12 +170,18 @@ const cacheSteamappData = function (appData) {
     });
 };
 
+const filterSteamappInfo = R.pick([
+  'name',
+  'steam_appid',
+  'background'
+]);
+
 getSteamappsPaths()
     .then(paths => Promise.all(paths.map(getSteamappId)))
     .then(R.unnest)
     .then(R.map(R.either(
         R.bind(steamappsCache.getKey, steamappsCache),
-        R.pipeP(getSteamappInfo, cacheSteamappData)
+        R.pipeP(getSteamappInfo, filterSteamappInfo, cacheSteamappData)
     )))
     .then(R.forEach(function (appData) {
         Promise.resolve(appData).then(function (appData) {
