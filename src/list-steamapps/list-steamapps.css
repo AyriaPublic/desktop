@@ -23,6 +23,7 @@
 .list-steamapps img {
     display: block;
     width: 30em;
+    height: 16.875em;
 }
 
 .list-steamapps figcaption {
