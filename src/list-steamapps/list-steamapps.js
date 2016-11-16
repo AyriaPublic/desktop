@@ -56,8 +56,10 @@ const getSteamLibraries = function () {
     return Promise.all([getSteamInstallPath(), getSteamLibraryFoldersConfig()])
         .then(([steamInstall, settings]) => {
             const folders = entries(settings['LibraryFolders'])
-                .filter(([key, _]) => key.match(/^\d+$/)) // Filter any non-numeric entries
-                .map(([_, path]) => path); // Discards key from entries
+                // Filter any non-numeric entries by matching the key
+                .filter(pair => pair[0].match(/^\d+$/))
+                // Discards key from entries
+                .map(pair => pair[1]);
 
             return [steamInstall].concat(folders);
         });
