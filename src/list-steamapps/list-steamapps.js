@@ -10,6 +10,7 @@ const flatCache = require('flat-cache');
 const hyperquest = require('hyperquest');
 const mkdirp = pify(require('mkdirp'));
 const R = require('ramda');
+const slugify = require('github-slugid');
 const vdf = require('vdfjs');
 const winreg = require('winreg');
 
@@ -116,16 +117,22 @@ const renderSteamapp = function (appData) {
     const gamesListElement = document.querySelector('[data-list-games]');
 
     const appItem = document.createElement('li');
+    const appLink = document.createElement('a');
     const appContainer = document.createElement('figure');
     const appName = document.createElement('figcaption');
     const appBackground = document.createElement('img');
 
+    // Slugify steamapp name
+    const appUrl = slugify(String(appData.name));
+
     // Fill in DOM nodes with data
+    appLink.setAttribute('href', `./game-detail/game-detail.html#${appUrl}`);
     appName.textContent = appData.name;
     appBackground.src = appData.background;
 
     // Construct and insert DOM structure
-    appItem.appendChild(appContainer);
+    appItem.appendChild(appLink);
+    appLink.appendChild(appContainer);
     appContainer.appendChild(appName);
     appContainer.appendChild(appBackground);
     gamesListElement.appendChild(appItem);
@@ -171,9 +178,9 @@ const cacheSteamappData = function (appData) {
 };
 
 const filterSteamappInfo = R.pick([
-  'name',
-  'steam_appid',
-  'background'
+    'name',
+    'steam_appid',
+    'background'
 ]);
 
 getSteamappsPaths()

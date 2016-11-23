@@ -1,0 +1,37 @@
+.plugin-list {
+    display: inline-flex;
+    flex-direction: column;
+    font-size: 1.4em;
+    max-width: 40em;
+}
+
+.plugin-list > li {
+    align-items: center;
+    border-bottom: 1px solid #fff;
+    flex-direction: row;
+    justify-content: center;
+    margin: 2em;
+    padding-bottom: 0.1em;
+    padding-right: 0.5em;
+    position: relative;
+}
+
+.plugin-list > li[data-plugin-active]::before {
+    border-radius: 50%;
+    content: '';
+    display: flex;
+    height: 0.55em;
+    left: -1em;
+    margin-right: 0.4em;
+    position: absolute;
+    top: 0.5em;
+    width: 0.55em;
+}
+
+.plugin-list > li[data-plugin-active=true]::before {
+    background: #00b900;
+}
+
+.plugin-list > li[data-plugin-active=false]::before {
+    background: #c50000;
+}
