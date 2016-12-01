@@ -14,6 +14,9 @@ const slugify = require('github-slugid');
 const vdf = require('vdfjs');
 const winreg = require('winreg');
 
+const renderGameDetail = require('../game-detail/game-detail.js');
+const router = require('../router.js');
+
 const cachePath = envPaths('ayria', {suffix: ''}).cache;
 const steamappsCache = flatCache.load('steamapps', cachePath);
 
@@ -116,7 +119,7 @@ const getSteamappInfo = function (appId) {
 // Render passed object appData
 // renderSteamapp :: Object -> ()
 const renderSteamapp = function (appData) {
-    const gamesListElement = document.querySelector('[data-list-games]');
+    const gamesListElement = document.querySelector('[data-list-games] > ul');
 
     const appItem = document.createElement('li');
     const appLink = document.createElement('a');
@@ -125,12 +128,19 @@ const renderSteamapp = function (appData) {
     const appBackground = document.createElement('img');
 
     // Slugify steamapp name
-    const appUrl = slugify(String(appData.name));
+    const appSlug = slugify(String(appData.name));
 
     // Fill in DOM nodes with data
-    appLink.setAttribute('href', `./game-detail/game-detail.html#${appUrl}`);
+    appLink.setAttribute('href', `./game-detail/game-detail.html#${appSlug}`);
     appName.textContent = appData.name;
     appBackground.src = appData.background;
+
+    appLink.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        renderGameDetail(appSlug, appData);
+        router.onlyShowPartial('game-detail');
+    });
 
     // Construct and insert DOM structure
     appItem.appendChild(appLink);

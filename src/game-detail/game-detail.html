@@ -1,16 +1,22 @@
-<!DOCTYPE html>
-<html>
+<link rel="stylesheet" href="./game-detail.css">
+<link rel="stylesheet" href="./plugin-list.css">
 
-<head>
-    <meta charset="utf-8">
-    <title>Ayria</title>
-    <link rel="stylesheet" href="../main.css">
-</head>
+<template>
+    <section class="partial" data-game-detail>
+        <header class="game-detail-header">
+            <a class="game-detail-header-back" data-game-detail-header-back>&lt;</a>
+            <h1 class="game-detail-title" data-game-detail-name></h1>
+            <div class="game-detail-background-wrapper">
+                <img class="game-detail-background" data-game-detail-background>
+            </div>
+        </header>
+        <main class="game-detail-content">
+            <h2>Installed plugins</h2>
+            <ul class="plugin-list" data-plugin-list></ul>
+            <h2>Available plugins</h2>
+            <ul></ul>
+        </main>
+    </section>
+</template>
 
-<body>
-    <link rel="stylesheet" href="./game-detail.css">
-    <script src="./game-detail.js" defer></script>
-    <ul class="plugin-list" data-plugin-list></ul>
-</body>
-
-</html>
+<script>require('./game-detail/game-detail.js')</script>

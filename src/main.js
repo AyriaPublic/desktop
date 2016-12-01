@@ -26,7 +26,7 @@ const createWindow = function () {
     }
 
     mainWindow.once('ready-to-show', function () {
-      mainWindow.show();
+        mainWindow.show();
     });
 
     mainWindow.on('closed', function () {

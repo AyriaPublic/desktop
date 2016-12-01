@@ -5,12 +5,16 @@
     <meta charset="utf-8">
     <title>Ayria</title>
     <link rel="stylesheet" href="./main.css">
+
+    <link rel="import" href="list-steamapps/list-steamapps.html">
+    <link rel="import" href="game-detail/game-detail.html">
 </head>
 
 <body>
-    <link rel="stylesheet" href="./list-steamapps/list-steamapps.css">
-    <script src="./list-steamapps/list-steamapps.js" defer></script>
-    <ul class="list-steamapps" data-list-games></ul>
+    <script>
+        require('./imports')
+        require('./router')
+    </script>
 </body>
 
 </html>
