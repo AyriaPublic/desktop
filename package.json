@@ -20,12 +20,12 @@
     "url": "https://github.com/AyriaPublic/ayria-desktop.git"
   },
   "scripts": {
-    "start": "run-p --silent electron watch",
+    "start": "electron .",
+    "dev": "run-p --silent start watch",
     "test": "",
     "preversion": "npm test",
     "postversion": "git push",
-    "electron": "electron .",
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint src/*.js src/**/*.js",
     "watch": "chokidar src -c \"npm run test && npm run lint\""
   },
   "dependencies": {
