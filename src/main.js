@@ -13,7 +13,11 @@ let mainWindow;
 
 // Open index.html in a new browser window
 const createWindow = function () {
-    mainWindow = new BrowserWindow({show: false});
+    mainWindow = new BrowserWindow({
+        show: false,
+        minWidth: 500,
+        minHeight: 500
+    });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Open the DevTools when in development environment
