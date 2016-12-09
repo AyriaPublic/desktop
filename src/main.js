@@ -21,7 +21,7 @@ const createWindow = function () {
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Open the DevTools when in development environment
-    if (process.env.NODE_ENV) {
+    if (process.env.NODE_ENV === 'development') {
         mainWindow.webContents.openDevTools();
     }
 
