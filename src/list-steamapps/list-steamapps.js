@@ -134,6 +134,7 @@ const renderSteamapp = function (appData) {
     appLink.setAttribute('href', `./game-detail/game-detail.html#${appSlug}`);
     appName.textContent = appData.name;
     appBackground.src = appData.background;
+    appBackground.alt = '';
 
     appLink.addEventListener('click', function (event) {
         event.preventDefault();

@@ -22,10 +22,10 @@
   "scripts": {
     "start": "electron .",
     "dev": "run-p --silent start watch",
-    "test": "",
+    "test": "ava test",
     "preversion": "npm test",
     "postversion": "git push",
-    "lint": "eslint src/*.js src/**/*.js",
+    "lint": "eslint src/*.js src/**/*.js test/*.js",
     "watch": "chokidar src -c \"npm run test && npm run lint\""
   },
   "dependencies": {
@@ -42,9 +42,11 @@
     "winreg": "^1.2.1"
   },
   "devDependencies": {
+    "ava": "^0.17.0",
     "chokidar-cli": "^1.2.0",
     "electron-reload": "^1.0.2",
     "eslint": "^3.2.2",
-    "npm-run-all": "^2.3.0"
+    "npm-run-all": "^2.3.0",
+    "spectron": "^3.4.0"
   }
 }
