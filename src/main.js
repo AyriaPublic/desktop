@@ -5,8 +5,6 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-require('electron-reload')(__dirname);
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected
 let mainWindow;
@@ -20,8 +18,9 @@ const createWindow = function () {
     });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-    // Open the DevTools when in development environment
-    if (process.env.NODE_ENV === 'development') {
+    // Run live reload and open DevTools when in development environment
+    if (process.env.NODE_ENV === 'development' && process.defaultApp) {
+        require('electron-reload')(__dirname);
         mainWindow.webContents.openDevTools();
     }
 
