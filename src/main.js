@@ -9,6 +9,14 @@ const BrowserWindow = electron.BrowserWindow;
 // be closed automatically when the JavaScript object is garbage collected
 let mainWindow;
 
+const isDevelopment =
+    process.env.NODE_ENV === 'development' &&
+    process.defaultApp
+
+if (isDevelopment) {
+    require('electron-reload')(__dirname);
+}
+
 // Open index.html in a new browser window
 const createWindow = function () {
     mainWindow = new BrowserWindow({
@@ -19,8 +27,7 @@ const createWindow = function () {
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Run live reload and open DevTools when in development environment
-    if (process.env.NODE_ENV === 'development' && process.defaultApp) {
-        require('electron-reload')(__dirname);
+    if (isDevelopment) {
         mainWindow.webContents.openDevTools();
     }
 
