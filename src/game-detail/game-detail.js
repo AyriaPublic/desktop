@@ -12,8 +12,8 @@ const dataPath = envPaths('ayria', {suffix: ''}).data;
 const router = require('../router.js');
 
 // Get the plugin files from the passed directory
-// getgamePlugins :: String -> Promise -> Array
-const getgamePlugins = function (pluginsPath, active) {
+// getGamePlugins :: String -> Promise -> Array
+const getGamePlugins = function (pluginsPath, active) {
     return fs.readdir(pluginsPath)
         .then(R.map(path.parse))
         // Get .ayria32 and .ayria64 files
@@ -25,7 +25,7 @@ const getgamePlugins = function (pluginsPath, active) {
         .catch(function (error) {
             if (error.code === 'ENOENT') {
                 return mkdirp(pluginsPath)
-                .then(() => Promise.resolve(getgamePlugins(pluginsPath)))
+                .then(() => Promise.resolve(getGamePlugins(pluginsPath)))
                 .catch(function (error) {
                     Promise.reject(error);
                 });
@@ -36,7 +36,7 @@ const getgamePlugins = function (pluginsPath, active) {
 };
 
 // Add plugin information to the DOM plugin list
-// renderPlugin :: String -> ()
+// renderPlugin :: Object -> ()
 const renderPlugin = function (pluginData) {
     const pluginList = document.querySelector('[data-plugin-list]');
     const pluginItem = document.createElement('li');
@@ -77,8 +77,8 @@ const renderGameDetail = function (gameSlug, gameData) {
 
     // Get plugins from the game directory and in the nested 'disabled' directory
     Promise.all([
-        getgamePlugins(path.join(getGameDirectory(dataPath, gameSlug)), true),
-        getgamePlugins(path.join(getGameDirectory(dataPath, gameSlug), 'disabled'), false)
+        getGamePlugins(path.join(getGameDirectory(dataPath, gameSlug)), true),
+        getGamePlugins(path.join(getGameDirectory(dataPath, gameSlug), 'disabled'), false)
     ])
         .then(R.flatten)
         .then(R.map(renderPlugin));
