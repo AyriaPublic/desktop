@@ -6,8 +6,10 @@ const test = require('ava');
 
 test.beforeEach(t => {
     t.context.app = new Application({
-        path: path.resolve(__dirname, '../node_modules/.bin/electron'),
-        args: [path.resolve(__dirname, '../')],
+        path: path.join(__dirname, '..', 'node_modules', '.bin', 'electron'),
+        args: [
+          path.join(__dirname, '..')
+        ],
     });
 
     return t.context.app.start();
