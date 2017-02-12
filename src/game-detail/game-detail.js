@@ -8,7 +8,7 @@ const envPaths = require('env-paths');
 const mkdirp = pify(require('mkdirp'));
 const R = require('ramda');
 
-const dataPath = envPaths('ayria', {suffix: ''}).data;
+const dataPath = envPaths('ayria-desktop', {suffix: ''}).data;
 const router = require('../router.js');
 
 // Get the plugin files from the passed directory

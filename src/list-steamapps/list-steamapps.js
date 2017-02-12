@@ -17,7 +17,7 @@ const winreg = require('winreg');
 const renderGameDetail = require('../game-detail/game-detail.js');
 const router = require('../router.js');
 
-const cachePath = envPaths('ayria', {suffix: ''}).cache;
+const cachePath = envPaths('ayria-desktop', {suffix: ''}).cache;
 const steamappsCache = flatCache.load('steamapps', cachePath);
 
 // Return location of primary Steam library (installation directory)
