@@ -11,7 +11,7 @@ let mainWindow;
 
 const isDevelopment =
     process.env.NODE_ENV === 'development' &&
-    process.defaultApp
+    process.defaultApp;
 
 if (isDevelopment) {
     require('electron-reload')(__dirname);

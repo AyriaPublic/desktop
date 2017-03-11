@@ -7,7 +7,7 @@ const hideAllpartials = function () {
 
     for (let partial of partials) {
         partial.classList.remove('is-shown');
-    };
+    }
 };
 
 const showPartial = function (name) {
@@ -15,7 +15,7 @@ const showPartial = function (name) {
 };
 
 document.addEventListener('navigate', function (event) {
-  routes[event.detail.viewName].render(event.detail.state);
-  hideAllpartials();
-  showPartial(event.detail.viewName);
+    routes[event.detail.viewName].render(event.detail.state);
+    hideAllpartials();
+    showPartial(event.detail.viewName);
 });
