@@ -195,7 +195,7 @@ const cacheSteamappData = function (appData) {
 const filterSteamappInfo = R.pick([
     'name',
     'steam_appid',
-    'background'
+    'background',
 ]);
 
 getSteamappsPaths()
@@ -216,4 +216,4 @@ getSteamappsPaths()
 
 module.exports = {
     render: renderSteamapp,
-}
+};

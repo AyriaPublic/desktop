@@ -21,15 +21,14 @@
   },
   "scripts": {
     "start": "electron .",
-    "dev": "run-p --silent start watch",
     "test": "ava test",
     "preversion": "npm test",
     "postversion": "git push",
     "lint": "eslint src/*.js src/**/*.js test/*.js",
-    "watch": "chokidar src -c \"npm run test && npm run lint\"",
     "pack": "run-s pack:*",
     "pack:linux": "electron-packager . --platform=linux --arch=x64",
-    "pack:windows": "electron-packager . --platform=win32 --arch=x64"
+    "pack:windows": "electron-packager . --platform=win32 --arch=x64",
+    "ci": "run-p test 'lint -- --max-warnings 0'"
   },
   "dependencies": {
     "electron": "~1.4.13",
@@ -46,7 +45,6 @@
   },
   "devDependencies": {
     "ava": "^0.17.0",
-    "chokidar-cli": "^1.2.0",
     "electron-packager": "^8.4.0",
     "electron-reload": "^1.1.0",
     "eslint": "^3.13.0",
