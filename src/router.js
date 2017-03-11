@@ -1,21 +1,21 @@
 'use strict';
 
+const routes = require('./routes');
+
 const hideAllpartials = function () {
-    // refine this querySelectorAll
-    const partials = document.querySelectorAll('.is-shown');
-    Array.prototype.forEach.call(partials, function (partial) {
+    const partials = document.querySelectorAll('[data-partial]');
+
+    for (let partial of partials) {
         partial.classList.remove('is-shown');
-    });
+    };
 };
 
-const onlyShowPartial = function (name) {
-    hideAllpartials();
-
-    // Display the current partial
+const showPartial = function (name) {
     document.querySelector(`[data-${name}]`).classList.add('is-shown');
 };
 
-module.exports = {
-    hideAllpartials: hideAllpartials,
-    onlyShowPartial: onlyShowPartial
-};
+document.addEventListener('navigate', function (event) {
+  routes[event.detail.viewName].render(event.detail.state);
+  hideAllpartials();
+  showPartial(event.detail.viewName);
+});
