@@ -14,9 +14,6 @@ const slugify = require('github-slugid');
 const vdf = require('vdfjs');
 const winreg = require('winreg');
 
-const renderGameDetail = require('../game-detail/game-detail.js');
-const router = require('../router.js');
-
 const cachePath = envPaths('ayria-desktop', {suffix: ''}).cache;
 const steamappsCache = flatCache.load('steamapps', cachePath);
 
@@ -131,7 +128,6 @@ const renderSteamapp = function (appData) {
     const appSlug = slugify(String(appData.name));
 
     // Fill in DOM nodes with data
-    appLink.setAttribute('href', `./game-detail/game-detail.html#${appSlug}`);
     appName.textContent = appData.name;
     appBackground.src = appData.background;
     appBackground.alt = '';
@@ -139,8 +135,14 @@ const renderSteamapp = function (appData) {
     appLink.addEventListener('click', function (event) {
         event.preventDefault();
 
-        renderGameDetail(appSlug, appData);
-        router.onlyShowPartial('game-detail');
+        document.dispatchEvent(
+            new CustomEvent('navigate', {
+                detail: {
+                    state: Object.assign({}, appData, {appSlug}),
+                    viewName: 'game-detail',
+                }
+            })
+        );
     });
 
     // Construct and insert DOM structure
@@ -211,3 +213,7 @@ getSteamappsPaths()
     .then(steamapps => Promise.all(steamapps).then(() => {
         steamappsCache.save();
     }));
+
+module.exports = {
+    render: renderSteamapp,
+}

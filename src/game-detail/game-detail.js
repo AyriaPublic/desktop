@@ -9,7 +9,6 @@ const mkdirp = pify(require('mkdirp'));
 const R = require('ramda');
 
 const dataPath = envPaths('ayria-desktop', {suffix: ''}).data;
-const router = require('../router.js');
 
 // Get the plugin files from the passed directory
 // getGamePlugins :: String -> Promise -> Array
@@ -56,32 +55,40 @@ const getGameDirectory = function (dataPath, gameSlug) {
 };
 
 // Render passed game slug and data
-// renderGameDetail :: String, Object -> ()
-const renderGameDetail = function (gameSlug, gameData) {
-    const pluginList = document.querySelector('[data-plugin-list]');
-    const gameName = document.querySelector('[data-game-detail-name]');
-    const gameBackground = document.querySelector('[data-game-detail-background]');
+// renderGameDetail :: Object -> ()
+const renderGameDetail = function (gameData) {
     const backButton = document.querySelector('[data-game-detail-header-back]');
+    const gameBackground = document.querySelector('[data-game-detail-background]');
+    const gameDirectory = getGameDirectory(dataPath, gameData.appSlug);
+    const gameName = document.querySelector('[data-game-detail-name]');
+    const pluginList = document.querySelector('[data-plugin-list]');
 
     gameName.textContent = gameData.name;
     gameBackground.src = gameData.background;
 
-    // Activate navigation
     backButton.addEventListener('click', function (event) {
         event.preventDefault();
-        router.onlyShowPartial('list-games');
+        document.dispatchEvent(
+            new CustomEvent('navigate', {
+                detail: {
+                    state: gameData,
+                    viewName: 'list-games',
+                }
+            })
+        );
     });
 
-    // Empty list of plugins first
     pluginList.innerHTML = '';
 
     // Get plugins from the game directory and in the nested 'disabled' directory
     Promise.all([
-        getGamePlugins(path.join(getGameDirectory(dataPath, gameSlug)), true),
-        getGamePlugins(path.join(getGameDirectory(dataPath, gameSlug), 'disabled'), false)
+        getGamePlugins(gameDirectory, true),
+        getGamePlugins(path.join(gameDirectory, 'disabled'), false),
     ])
         .then(R.flatten)
         .then(R.map(renderPlugin));
 };
 
-module.exports = renderGameDetail;
+module.exports = {
+    render: renderGameDetail,
+};
