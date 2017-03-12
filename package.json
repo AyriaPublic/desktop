@@ -31,7 +31,7 @@
     "ci": "run-p test 'lint -- --max-warnings 0'"
   },
   "dependencies": {
-    "electron": "~1.4.13",
+    "electron": "~1.6.2",
     "env-paths": "^1.0.0",
     "flat-cache": "^1.2.2",
     "github-slugid": "^1.0.1",
@@ -44,7 +44,7 @@
     "winreg": "^1.2.2"
   },
   "devDependencies": {
-    "ava": "^0.17.0",
+    "ava": "^0.18.2",
     "electron-packager": "^8.4.0",
     "electron-reload": "^1.1.0",
     "eslint": "^3.13.0",
