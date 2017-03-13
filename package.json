@@ -49,6 +49,6 @@
     "electron-reload": "^1.1.0",
     "eslint": "^3.13.0",
     "npm-run-all": "^4.0.0",
-    "spectron": "^3.4.1"
+    "spectron": "~3.6.0"
   }
 }
