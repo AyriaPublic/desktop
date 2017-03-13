@@ -1,11 +1,10 @@
 'use strict';
-
 const pify = require('pify');
-const fs = pify(require('fs'));
-const path = require('path');
 
 const envPaths = require('env-paths');
+const fs = pify(require('fs'));
 const mkdirp = pify(require('mkdirp'));
+const path = require('path');
 const R = require('ramda');
 
 const dataPath = envPaths('ayria-desktop', {suffix: ''}).data;
@@ -24,10 +23,10 @@ const getGamePlugins = function (pluginsPath, active) {
         .catch(function (error) {
             if (error.code === 'ENOENT') {
                 return mkdirp(pluginsPath)
-                .then(() => Promise.resolve(getGamePlugins(pluginsPath)))
-                .catch(function (error) {
-                    Promise.reject(error);
-                });
+                    .then(getGamePlugins)
+                    .catch(function (error) {
+                        Promise.reject(error);
+                    });
             } else {
                 Promise.reject(error);
             }
@@ -72,7 +71,7 @@ const renderGameDetail = function (gameData) {
             new CustomEvent('navigate', {
                 detail: {
                     state: gameData,
-                    viewName: 'list-games',
+                    viewName: 'list-steamapps',
                 }
             })
         );
