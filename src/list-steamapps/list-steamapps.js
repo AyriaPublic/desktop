@@ -1,93 +1,19 @@
 'use strict';
-
 const pify = require('pify');
-const fs = pify(require('fs'), {exclude: ['createWriteStream']});
-const path = require('path');
 
-const entries = require('object.entries');
 const envPaths = require('env-paths');
 const flatCache = require('flat-cache');
+const fs = pify(require('fs'), {exclude: ['createWriteStream']});
 const hyperquest = require('hyperquest');
 const mkdirp = pify(require('mkdirp'));
+const path = require('path');
 const R = require('ramda');
 const slugify = require('github-slugid');
-const vdf = require('vdfjs');
-const winreg = require('winreg');
+
+const steamFsUtils = require('./steam-fs-utils.js');
 
 const cachePath = envPaths('ayria-desktop', {suffix: ''}).cache;
 const steamappsCache = flatCache.load('steamapps', cachePath);
-
-// Return location of primary Steam library (installation directory)
-// getSteamInstallPath :: () -> Promise -> String
-const getSteamInstallPath = function () {
-    if (process.platform === 'linux') {
-        return Promise.resolve(envPaths('Steam', {suffix: ''}).data);
-    }
-
-    const steamRegistryKey = winreg({
-        hive: winreg.HKCU,
-        key: '\\SOFTWARE\\Valve\\Steam'
-    });
-
-    return new Promise(function (resolve, reject) {
-        steamRegistryKey.get('SteamPath', function (error, result) {
-            if (error) {
-                reject(error);
-            }
-
-            resolve(result.value);
-        });
-    });
-};
-
-// Parses the `libraryfolders.vdf` config as found in the primary Steam library's steamapps directory
-// getSteamLibraryFoldersConfig :: () -> Promise -> {Object}
-const getSteamLibraryFoldersConfig = function () {
-    return getSteamInstallPath().then(steamInstall => {
-        const config = path.join(steamInstall, 'steamapps', 'libraryfolders.vdf');
-
-        return fs.readFile(config, 'utf-8').then(vdf.parse);
-    });
-};
-
-// Return location of all Steam libraries, including the installation directory
-// getSteamLibraries :: () -> Promise -> [String]
-const getSteamLibraries = function () {
-    return Promise.all([getSteamInstallPath(), getSteamLibraryFoldersConfig()])
-        .then(([steamInstall, settings]) => {
-            const folders = entries(settings['LibraryFolders'])
-                // Filter any non-numeric entries by matching the key
-                .filter(pair => pair[0].match(/^\d+$/))
-                // Discards key from entries
-                .map(pair => pair[1]);
-
-            return [steamInstall].concat(folders);
-        });
-};
-
-// Return each Steam libraries' steamapps directory
-// getSteamappsPaths :: () -> [String]
-const getSteamappsPaths = function () {
-    return getSteamLibraries().then(libraries => libraries.map(library => {
-        return path.join(library, 'steamapps');
-    }));
-};
-
-// Return array of app ID's reading from files in the give given path
-// getSteamappId :: String -> Promise -> [String]
-const getSteamappId = function (path) {
-    return fs.readdir(path).then(function (fileNames) {
-        // Filter out non appmanifest fileNames
-        fileNames = fileNames.filter(function (fileName) {
-            return ~fileName.indexOf('appmanifest');
-        });
-
-        // Get the digits and thus app ID's out of the filename
-        return fileNames.map(function (fileName) {
-            return fileName.match(/\d+/)[0];
-        });
-    });
-};
 
 // Requests appInfo from the passed appId at the Steam API
 // getSteamappInfo :: String -> Promise -> Object
@@ -116,7 +42,7 @@ const getSteamappInfo = function (appId) {
 // Render passed object appData
 // renderSteamapp :: Object -> ()
 const renderSteamapp = function (appData) {
-    const gamesListElement = document.querySelector('[data-list-games] > ul');
+    const gamesListElement = document.querySelector('[data-list-steamapps] > ul');
 
     const appItem = document.createElement('li');
     const appLink = document.createElement('a');
@@ -198,8 +124,8 @@ const filterSteamappInfo = R.pick([
     'background',
 ]);
 
-getSteamappsPaths()
-    .then(paths => Promise.all(paths.map(getSteamappId)))
+steamFsUtils.getSteamappsDirectories()
+    .then(paths => Promise.all(paths.map(steamFsUtils.getSteamappIds)))
     .then(R.unnest)
     .then(R.map(R.either(
         R.bind(steamappsCache.getKey, steamappsCache),
@@ -215,5 +141,5 @@ getSteamappsPaths()
     }));
 
 module.exports = {
-    render: renderSteamapp,
+    render: () => {},
 };

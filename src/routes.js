@@ -5,5 +5,5 @@ const listSteamapps = require('./list-steamapps/list-steamapps');
 
 module.exports = {
     'game-detail': gameDetail,
-    'list-games': listSteamapps,
+    'list-steamapps': listSteamapps,
 };
