@@ -1,10 +1,12 @@
 * {
+    box-sizing: inherit;
     margin: 0;
     padding: 0;
 }
 
 html {
     background: #00162d;
+    box-sizing: border-box;
     color: #f6f6f6;
 }
 
