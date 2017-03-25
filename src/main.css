@@ -53,6 +53,10 @@ small {
     font-size: 0.707em;
 }
 
+img {
+    height: 100%;
+}
+
 .partial {
     color: var(--color-accent);
     height: 0;
