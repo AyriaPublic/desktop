@@ -7,5 +7,5 @@ for (let link of importLinks) {
     const template = link.import.querySelector('template');
     const clone = document.importNode(template.content, true);
 
-    document.querySelector('body').appendChild(clone);
+    document.querySelector('[data-main-view]').appendChild(clone);
 }
