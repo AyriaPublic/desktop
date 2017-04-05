@@ -44,7 +44,7 @@
     "winreg": "^1.2.2"
   },
   "devDependencies": {
-    "ava": "^0.18.2",
+    "ava": "^0.19.0",
     "electron-packager": "^8.4.0",
     "electron-reload": "^1.1.0",
     "eslint": "^3.13.0",
