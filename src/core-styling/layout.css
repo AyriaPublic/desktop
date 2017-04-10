@@ -1,0 +1,19 @@
+.partial {
+    height: 0;
+    opacity: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    /* Hide by default */
+    pointer-events: none;
+    transition: visibility 0s 0.12s linear , opacity 0.12s ease-in;
+    visibility: hidden;
+}
+
+.partial.is-shown {
+    height: auto;
+    opacity: 1;
+    pointer-events: auto;
+    transition: visibility 0s 0s linear , opacity 0.36s ease-out;
+    visibility: visible;
+}
