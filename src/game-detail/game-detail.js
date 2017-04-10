@@ -56,7 +56,6 @@ const getGameDirectory = function (dataPath, gameSlug) {
 // Render passed game slug and data
 // renderGameDetail :: Object -> ()
 const renderGameDetail = function (gameData) {
-    const backButton = document.querySelector('[data-game-detail-header-back]');
     const gameBackground = document.querySelector('[data-game-detail-background]');
     const gameDirectory = getGameDirectory(dataPath, gameData.appSlug);
     const gameName = document.querySelector('[data-game-detail-name]');
@@ -64,18 +63,6 @@ const renderGameDetail = function (gameData) {
 
     gameName.textContent = gameData.name;
     gameBackground.src = gameData.background;
-
-    backButton.addEventListener('click', function (event) {
-        event.preventDefault();
-        document.dispatchEvent(
-            new CustomEvent('navigate', {
-                detail: {
-                    state: gameData,
-                    viewName: 'list-steamapps',
-                }
-            })
-        );
-    });
 
     pluginList.innerHTML = '';
 

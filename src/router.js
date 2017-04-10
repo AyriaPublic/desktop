@@ -1,6 +1,7 @@
 'use strict';
 
 const routes = require('./routes');
+const header = require('./header/header');
 
 const hideAllpartials = function () {
     const partials = document.querySelectorAll('[data-partial]');
@@ -14,8 +15,9 @@ const showPartial = function (name) {
     document.querySelector(`[data-${name}]`).classList.add('is-shown');
 };
 
-document.addEventListener('navigate', function (event) {
-    routes[event.detail.viewName].render(event.detail.state);
+document.addEventListener('navigate', function ({detail}) {
+    routes[detail.viewName].render(detail.state);
+    header.render(detail.state);
     hideAllpartials();
-    showPartial(event.detail.viewName);
+    showPartial(detail.viewName);
 });

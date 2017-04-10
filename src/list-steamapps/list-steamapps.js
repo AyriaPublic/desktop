@@ -64,7 +64,17 @@ const renderSteamapp = function (appData) {
         document.dispatchEvent(
             new CustomEvent('navigate', {
                 detail: {
-                    state: Object.assign({}, appData, {appSlug}),
+                    state: Object.assign(
+                        {},
+                        appData,
+                        {appSlug},
+                        {
+                            headerNavigation: {
+                                previous: true,
+                                addPlugin: true,
+                            }
+                        }
+                    ),
                     viewName: 'game-detail',
                 }
             })
