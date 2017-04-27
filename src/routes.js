@@ -1,9 +1,7 @@
 'use strict';
 
-const gameDetail = require('./game-detail/game-detail');
-const listSteamapps = require('./list-steamapps/list-steamapps');
-
 module.exports = {
-    'game-detail': gameDetail,
-    'list-steamapps': listSteamapps,
+    'add-plugin': require('./add-plugin/add-plugin'),
+    'game-detail': require('./game-detail/game-detail'),
+    'list-steamapps': require('./list-steamapps/list-steamapps'),
 };

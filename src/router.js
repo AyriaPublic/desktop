@@ -16,6 +16,7 @@ const showPartial = function (name) {
 };
 
 document.addEventListener('navigate', function ({detail}) {
+    console.log('state', detail.state);
     routes[detail.viewName].render(detail.state);
     header.render(detail.state);
     hideAllpartials();
