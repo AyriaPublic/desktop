@@ -47,17 +47,17 @@ const renderPlugin = function (pluginData) {
     pluginList.appendChild(pluginItem);
 };
 
-// Combine path to ayria data and slugified game name from the page URI
-// getGameDirectory :: String, String -> String
-const getGameDirectory = function (dataPath, gameSlug) {
-    return path.join(dataPath, gameSlug);
+// Combine path to ayria data and slugified game name
+// getGameDirectory :: String -> String
+const getGameDirectory = function (gameSlug) {
+    return path.join(envPaths('ayria-desktop', {suffix: ''}).data, gameSlug);
 };
 
 // Render passed game slug and data
 // renderGameDetail :: Object -> ()
 const renderGameDetail = function (gameData) {
     const gameBackground = document.querySelector('[data-game-detail-background]');
-    const gameDirectory = getGameDirectory(dataPath, gameData.appSlug);
+    const gameDirectory = getGameDirectory(gameData.appSlug);
     const gameName = document.querySelector('[data-game-detail-name]');
     const pluginList = document.querySelector('[data-plugin-list]');
 
@@ -77,4 +77,5 @@ const renderGameDetail = function (gameData) {
 
 module.exports = {
     render: renderGameDetail,
+    getGameDirectory,
 };
