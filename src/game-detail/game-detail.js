@@ -1,13 +1,11 @@
 'use strict';
 const pify = require('pify');
 
-const envPaths = require('env-paths');
 const fs = pify(require('fs'));
 const mkdirp = pify(require('mkdirp'));
 const path = require('path');
 const R = require('ramda');
-
-const dataPath = envPaths('ayria-desktop', {suffix: ''}).data;
+const { getGlobal } = require('electron').remote;
 
 // Get the plugin files from the passed directory
 // getGamePlugins :: String -> Promise -> Array
@@ -50,7 +48,7 @@ const renderPlugin = function (pluginData) {
 // Combine path to ayria data and slugified game name
 // getGameDirectory :: String -> String
 const getGameDirectory = function (gameSlug) {
-    return path.join(envPaths('ayria-desktop', {suffix: ''}).data, gameSlug);
+    return path.join(getGlobal('appPaths').data, gameSlug);
 };
 
 // Render passed game slug and data
@@ -77,5 +75,4 @@ const renderGameDetail = function (gameData) {
 
 module.exports = {
     render: renderGameDetail,
-    getGameDirectory,
 };

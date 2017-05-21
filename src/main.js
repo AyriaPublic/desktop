@@ -1,6 +1,7 @@
 'use strict';
 
 const electron = require('electron');
+const envPaths = require('env-paths')('ayria-desktop', {suffix: ''});
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -17,6 +18,11 @@ if (isDevelopment) {
     require('electron-reload')(__dirname);
 }
 
+global.appPaths = {
+    'cache': envPaths.cache,
+    'data': envPaths.data,
+};
+
 // Open index.html in a new browser window
 const createWindow = function () {
     mainWindow = new BrowserWindow({
@@ -27,9 +33,9 @@ const createWindow = function () {
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Run live reload and open DevTools when in development environment
-    if (isDevelopment) {
+    // if (isDevelopment) {
         mainWindow.webContents.openDevTools();
-    }
+    // }
 
     mainWindow.once('ready-to-show', function () {
         mainWindow.show();

@@ -20,6 +20,7 @@
     "url": "https://github.com/AyriaPublic/ayria-desktop.git"
   },
   "scripts": {
+    "postinstall": "electron-rebuild",
     "start": "electron .",
     "test": "ava test",
     "preversion": "npm test",
@@ -31,6 +32,7 @@
     "ci": "run-p test 'lint -- --max-warnings 0'"
   },
   "dependencies": {
+    "concat-stream": "^1.6.0",
     "env-paths": "^1.0.0",
     "flat-cache": "^1.2.2",
     "github-slugid": "^1.0.1",
@@ -38,14 +40,17 @@
     "mkdirp": "^0.5.1",
     "object.entries": "^1.0.4",
     "pify": "^2.3.0",
+    "pouchdb": "^6.2.0",
     "ramda": "^0.23.0",
     "vdfjs": "^2.0.3",
-    "winreg": "^1.2.2"
+    "winreg": "^1.2.2",
+    "yauzl": "^2.8.0"
   },
   "devDependencies": {
     "ava": "^0.19.0",
     "electron": "^1.6.2",
     "electron-packager": "^8.4.0",
+    "electron-rebuild": "^1.5.7",
     "electron-reload": "^1.1.0",
     "eslint": "^3.13.0",
     "npm-run-all": "^4.0.0",
