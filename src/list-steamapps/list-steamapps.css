@@ -1,40 +1,49 @@
 .list-steamapps {
-    display: flex;
-    flex-wrap: wrap;
     align-content: space-around;
     align-items: center;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     list-style-type: none;
 }
 
 .list-steamapps figure {
-    position: relative;
-    transition: box-shadow 0.3s ease-out;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
     cursor: pointer;
     margin: 1em;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+    position: relative;
+    transition: box-shadow 0.3s ease-out;
 }
 
 .list-steamapps figure:hover {
-    position: relative;
-    margin: 1em;
     box-shadow: 0 12px 15px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+    margin: 1em;
+    position: relative;
 }
 
 .list-steamapps img {
     display: block;
-    width: 30em;
     height: 16.875em;
+    width: 30em;
+}
+
+.list-steamapps img:before {
+    background: linear-gradient(to top, #141e30, #243b55);
+    content: "";
+    height: 100%;
+    position: absolute;
+    width: 100%;
 }
 
 .list-steamapps figcaption {
-    position: absolute;
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
     color: white;
     font-size: 2em;
     font-weight: bold;
+    left: 50%;
+    position: absolute;
     text-align: center;
+    top: 70%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    z-index: 1;
 }
