@@ -47,7 +47,7 @@
     "electron": "~1.6.11",
     "electron-packager": "^8.4.0",
     "electron-reload": "^1.1.0",
-    "eslint": "^3.13.0",
+    "eslint": "^4.1.1",
     "npm-run-all": "^4.0.0",
     "semver-level-harmony": "^1.0.0",
     "spectron": "~3.6.4"

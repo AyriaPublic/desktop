@@ -23,19 +23,19 @@ const getSteamappInfo = function (appId) {
 
     return new Promise(function (resolve, reject) {
         hyperquest(`${steamApiUrl}${appId}&filters=basic,background`)
-          .on('data', function (chunk) {
-              response.push(chunk);
-          })
-          .on('end', function () {
-              const result = JSON.parse(Buffer.concat(response));
-              if (result[appId].success) {
-                  resolve(result[appId].data);
-              }
-              reject('Steam API failed at responding.');
-          })
-          .on('error', function (error) {
-              reject(error);
-          });
+            .on('data', function (chunk) {
+                response.push(chunk);
+            })
+            .on('end', function () {
+                const result = JSON.parse(Buffer.concat(response));
+                if (result[appId].success) {
+                    resolve(result[appId].data);
+                }
+                reject('Steam API failed at responding.');
+            })
+            .on('error', function (error) {
+                reject(error);
+            });
     });
 };
 
