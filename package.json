@@ -44,12 +44,12 @@
   },
   "devDependencies": {
     "ava": "^0.19.0",
-    "electron": "~1.6.11",
+    "electron": "~1.7.4",
     "electron-packager": "^8.4.0",
     "electron-reload": "^1.1.0",
     "eslint": "^4.1.1",
     "npm-run-all": "^4.0.0",
     "semver-level-harmony": "^1.0.0",
-    "spectron": "~3.6.4"
+    "spectron": "~3.7.2"
   }
 }
