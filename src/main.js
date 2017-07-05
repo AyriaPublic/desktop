@@ -1,6 +1,7 @@
 'use strict';
 
 const electron = require('electron');
+const envPaths = require('env-paths')('ayria-desktop', {suffix: ''});
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -16,6 +17,11 @@ const isDevelopment =
 if (isDevelopment) {
     require('electron-reload')(__dirname);
 }
+
+global.appPaths = {
+    'cache': envPaths.cache,
+    'data': envPaths.data,
+};
 
 // Open index.html in a new browser window
 const createWindow = function () {

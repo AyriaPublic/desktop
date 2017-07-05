@@ -1,7 +1,6 @@
 'use strict';
 const pify = require('pify');
 
-const envPaths = require('env-paths');
 const flatCache = require('flat-cache');
 const fs = pify(require('fs'), {exclude: ['createWriteStream']});
 const hyperquest = require('hyperquest');
@@ -9,11 +8,11 @@ const mkdirp = pify(require('mkdirp'));
 const path = require('path');
 const R = require('ramda');
 const slugify = require('github-slugid');
+const { getGlobal } = require('electron').remote;
 
 const steamFsUtils = require('./steam-fs-utils.js');
 
-const cachePath = envPaths('ayria-desktop', {suffix: ''}).cache;
-const steamappsCache = flatCache.load('steamapps', cachePath);
+const steamappsCache = flatCache.load('steamapps', getGlobal('appPaths').cache);
 
 // Requests appInfo from the passed appId at the Steam API
 // getSteamappInfo :: String -> Promise -> Object
@@ -92,7 +91,7 @@ const renderSteamapp = function (appData) {
 // Takes steamappData, downloads the background and save the data to the cache
 // cacheSteamappData :: Object -> Promise -> Object
 const cacheSteamappData = function (appData) {
-    const backgroundPath = path.join(cachePath, 'backgrounds');
+    const backgroundPath = path.join(getGlobal('appPaths').cache, 'backgrounds');
     const appBackgroundPath = path.format({
         dir: backgroundPath,
         name: appData.steam_appid,
