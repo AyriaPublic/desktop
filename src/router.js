@@ -1,7 +1,7 @@
 'use strict';
 
 const routes = require('./routes');
-const header = require('./header/header');
+const header = require('./partials/app-header/app-header');
 
 const hideAllpartials = function () {
     const partials = document.querySelectorAll('[data-partial]');

@@ -10,7 +10,7 @@ const R = require('ramda');
 const slugify = require('github-slugid');
 const { getGlobal } = require('electron').remote;
 
-const steamFsUtils = require('./steam-fs-utils.js');
+const steamFsUtils = require('../../core/steam-fs');
 
 const steamappsCache = flatCache.load('steamapps', getGlobal('appPaths').cache);
 

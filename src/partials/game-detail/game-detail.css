@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 24vh;
+    min-height: 24vh;
 }
 
 .game-detail-header-back {
@@ -21,6 +21,8 @@
 
 .game-detail-title {
     z-index: 1;
+    margin: 0;
+    text-align: center;
 }
 
 .game-detail-background-wrapper {

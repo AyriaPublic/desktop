@@ -1,10 +1,10 @@
 'use strict';
 const dialog = require('electron').remote.dialog;
-const extractPlugin = require('../add-plugin/add-plugin').extractPlugin;
+const { installPlugin } = require('../../core/plugin');
 
 const navigation = {
-    previous: document.querySelector('[data-header-previous]'),
-    addPlugin: document.querySelector('[data-header-add-plugin]'),
+    previous: document.querySelector('[data-app-header-previous]'),
+    addPlugin: document.querySelector('[data-app-header-add-plugin]'),
 };
 
 navigation.previous.addEventListener('click', function (event) {
@@ -36,7 +36,7 @@ navigation.addPlugin.addEventListener('click', function (event) {
         function (filePath) {
             if (!filePath) return;
 
-            extractPlugin(
+            installPlugin(
                 filePath[0],
                 navigation.addPlugin.getAttribute('game-slug')
             );
