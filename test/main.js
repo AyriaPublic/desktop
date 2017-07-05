@@ -15,16 +15,14 @@ test.beforeEach(t => {
     return t.context.app.start();
 });
 
-test.afterEach(t => {
-    return t.context.app.stop();
-});
+test.afterEach(t => t.context.app.stop());
 
-test('start window accessibility', t => {
-    return t.context.app.browserWindow
+test('start window accessibility', t =>
+    t.context.app.browserWindow
         .isVisible().then(visible =>
             t.true(visible, 'window is visible')
         )
         .auditAccessibility().then(audit =>
             t.false(audit.failed, 'accessibility audit was successful')
-        );
-});
+        )
+);
