@@ -26,12 +26,11 @@ navigation.previous.addEventListener('click', function (event) {
 
 navigation.addPlugin.addEventListener('click', function (event) {
     event.preventDefault();
-
     dialog.showOpenDialog(
         {
             'title': 'Open Ayria plugin package',
             'filters': [
-            {'name': 'Ayria plugin package', extensions: ['zip']}
+                {'name': 'Ayria plugin package', extensions: ['zip']}
             ]
         },
       function (filePath) {
@@ -40,38 +39,22 @@ navigation.addPlugin.addEventListener('click', function (event) {
           extractPlugin(
               filePath[0],
               navigation.addPlugin.getAttribute('game-slug')
-          ).then(() => console.log('done'))
-
-        //   document.dispatchEvent(
-        //       new CustomEvent('navigate', {
-        //           detail: {
-        //               state: {
-        //                   headerNavigation: {
-        //                       previous: true,
-        //                       addPlugin: false,
-        //                   }
-        //               },
-        //               viewName: 'add-plugin',
-        //           }
-        //       })
-        //   );
+          );
       }
     );
 });
 
 const renderHeader = function (state) {
-    if(!state.headerNavigation) {
-        return;
-    }
+    if (!state.headerNavigation) return;
 
     Object.entries(navigation).forEach(function ([key, element]) {
         element.setAttribute('disabled', !state.headerNavigation[key]);
     });
-
-    navigation.addPlugin.setAttribute('game-id', state.steam_appid);
-    navigation.addPlugin.setAttribute('game-slug', state.appSlug);
 };
 
 module.exports = {
-    render: renderHeader,
+    render: (state) => {
+        renderHeader(state);
+        navigation.addPlugin.setAttribute('game-slug', state.appSlug);
+    },
 };

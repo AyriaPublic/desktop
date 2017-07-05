@@ -33,9 +33,9 @@ const createWindow = function () {
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Run live reload and open DevTools when in development environment
-    // if (isDevelopment) {
+    if (isDevelopment) {
         mainWindow.webContents.openDevTools();
-    // }
+    }
 
     mainWindow.once('ready-to-show', function () {
         mainWindow.show();
