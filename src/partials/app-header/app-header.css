@@ -1,4 +1,4 @@
-header {
+.app-header {
     background-color: #000;
     display: flex;
     height: 5rem;
@@ -7,7 +7,7 @@ header {
     z-index: 10;
 }
 
-.header-logo-container {
+.app-header-logo-container {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -17,16 +17,16 @@ header {
     z-index: -1;
 }
 
-.header-logo {
+.app-header-logo {
     height: 3rem;
     transition: filter 0.5s;
 }
 
-.header-logo:hover {
+.app-header-logo:hover {
     filter: drop-shadow(0 0 0.3rem #1ca6df);
 }
 
-.header-item {
+.app-header-item {
     height: 100%;
     width: 6rem;
     overflow: hidden;
@@ -36,21 +36,21 @@ header {
     align-items: center;
 }
 
-.header-item img {
+.app-header-item img {
     width: 30%;
     height: 30%;
 }
 
-.header-item:active {
+.app-header-item:active {
     background: #1997cc;
     color: black;
 }
 
-.header-item[disabled=true] {
+.app-header-item[disabled=true] {
     display: none;
 }
 
-.header-item::after {
+.app-header-item::after {
     background: #1ca6df;
     bottom: 0;
     content: '';
@@ -64,7 +64,7 @@ header {
     z-index: -1;
 }
 
-.header-item:hover::after {
+.app-header-item:hover::after {
     left: -20%;
     width: 100%;
     width: 130%;

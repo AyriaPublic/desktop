@@ -13,7 +13,7 @@ const getGamePlugins = function (pluginsPath, active) {
     return fs.readdir(pluginsPath)
         .then(R.map(path.parse))
         // Get .ayria32 and .ayria64 files
-        .then(R.filter(file => file.ext.match(/\.ayria(32|64)/)))
+        .then(R.filter(file => file.ext === '.ayria'))
         .then(R.map(file => ({
             'name': file.name,
             'active': active
