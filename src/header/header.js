@@ -33,14 +33,14 @@ navigation.addPlugin.addEventListener('click', function (event) {
                 {'name': 'Ayria plugin package', extensions: ['zip']}
             ]
         },
-      function (filePath) {
-          if (!filePath) return;
+        function (filePath) {
+            if (!filePath) return;
 
-          extractPlugin(
-              filePath[0],
-              navigation.addPlugin.getAttribute('game-slug')
-          );
-      }
+            extractPlugin(
+                filePath[0],
+                navigation.addPlugin.getAttribute('game-slug')
+            );
+        }
     );
 });
 
