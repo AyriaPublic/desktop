@@ -3,8 +3,6 @@
 const Application = require('spectron').Application;
 const path = require('path');
 const test = require('ava');
-const semverLevelHarmony = require('semver-level-harmony');
-const { electron, spectron } = require('../package.json').devDependencies;
 
 test.beforeEach(t => {
     t.context.app = new Application({
@@ -17,18 +15,14 @@ test.beforeEach(t => {
     return t.context.app.start();
 });
 
-test.afterEach(t => {
-    return t.context.app.stop();
-});
+test.afterEach(t => t.context.app.stop());
 
-test('start window accessibility', t => {
-    return t.context.app.browserWindow
-        .isVisible().then(visible => t.true(visible, 'window is visible'))
-        .auditAccessibility().then(audit => {
-            t.false(audit.failed, 'accessibility audit was successful');
-        });
-});
-
-test('electron and spectron version minor levels are the same', t => {
-    t.true(semverLevelHarmony('minor', electron, spectron));
-});
+test('start window accessibility', t =>
+    t.context.app.browserWindow
+        .isVisible().then(visible =>
+            t.true(visible, 'window is visible')
+        )
+        .auditAccessibility().then(audit =>
+            t.false(audit.failed, 'accessibility audit was successful')
+        )
+);
