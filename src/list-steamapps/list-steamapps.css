@@ -25,6 +25,7 @@
     display: block;
     height: 16.875em;
     width: 30em;
+    filter: contrast(1.1) brightness(1.1);
 }
 
 .list-steamapps img:before {
