@@ -7,6 +7,8 @@ const navigation = {
     addPlugin: document.querySelector('[data-app-header-add-plugin]'),
 };
 
+let appSlug;
+
 navigation.previous.addEventListener('click', function (event) {
     event.preventDefault();
     document.dispatchEvent(
@@ -38,7 +40,7 @@ navigation.addPlugin.addEventListener('click', function (event) {
 
             installPlugin(
                 filePath[0],
-                navigation.addPlugin.getAttribute('game-slug')
+                appSlug
             );
         }
     );
@@ -55,6 +57,6 @@ const renderHeader = function (state) {
 module.exports = {
     render: (state) => {
         renderHeader(state);
-        navigation.addPlugin.setAttribute('game-slug', state.appSlug);
+        appSlug = state.appSlug;
     },
 };
