@@ -3,7 +3,7 @@ const pify = require('pify');
 
 const flatCache = require('flat-cache');
 const fs = pify(require('fs'), {exclude: ['createWriteStream']});
-const hyperquest = require('hyperquest');
+const got = require('got');
 const mkdirp = pify(require('mkdirp'));
 const path = require('path');
 const R = require('ramda');
@@ -18,23 +18,19 @@ const steamappsCache = flatCache.load('steamapps', getGlobal('appPaths').cache);
 // getSteamappInfo :: String -> Promise -> Object
 const getSteamappInfo = function (appId) {
     const steamApiUrl = 'http://store.steampowered.com/api/appdetails?appids=';
-    let response = [];
 
     return new Promise(function (resolve, reject) {
-        hyperquest(`${steamApiUrl}${appId}&filters=basic,background`)
-            .on('data', function (chunk) {
-                response.push(chunk);
-            })
-            .on('end', function () {
-                const result = JSON.parse(Buffer.concat(response));
-                if (result[appId].success) {
-                    resolve(result[appId].data);
+        got(
+            `${steamApiUrl}${appId}&filters=basic,background`,
+            {json: true, useElectronNet: false}
+        )
+            .then((response) => {
+                if (response.body[appId].success) {
+                    resolve(response.body[appId].data);
                 }
                 reject('Steam API failed at responding.');
             })
-            .on('error', function (error) {
-                reject(error);
-            });
+            .catch(reject)
     });
 };
 
@@ -101,7 +97,7 @@ const cacheSteamappData = function (appData) {
     steamappsCache.setKey(appData.steam_appid, appData);
 
     return new Promise(function (resolve, reject) {
-        hyperquest(appData.background)
+        got.stream(appData.background, { useElectronNet: false })
             .pipe(fs.createWriteStream(appBackgroundPath, {}))
             .on('finish', function () {
                 appData.background = appBackgroundPath;
@@ -124,6 +120,7 @@ const cacheSteamappData = function (appData) {
                     reject(error);
                 }
             });
+
     });
 };
 

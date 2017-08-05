@@ -36,7 +36,7 @@
     "env-paths": "^1.0.0",
     "flat-cache": "^1.2.2",
     "github-slugid": "^1.0.1",
-    "hyperquest": "^2.1.2",
+    "got": "^7.1.0",
     "mkdirp": "^0.5.1",
     "object.entries": "^1.0.4",
     "pify": "^2.3.0",
