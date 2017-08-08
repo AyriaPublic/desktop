@@ -6,6 +6,42 @@ const mkdirp = pify(require('mkdirp'));
 const path = require('path');
 const R = require('ramda');
 const { getGlobal } = require('electron').remote;
+const PouchDB = require('pouchdb');
+
+const pluginStore = new PouchDB(
+    path.join(getGlobal('appPaths').data, 'plugins-store')
+);
+
+// document that tells PouchDB/CouchDB
+// to build up an index on doc.name
+var ddoc = {
+  _id: '_design/my_index',
+  views: {
+    by_id: {
+      map: function (doc) { emit(doc.game.id); }.toString()
+    }
+  }
+};
+// save it
+pluginStore.put(ddoc).then(function (a) {
+  // success!
+}).catch(console.error);
+
+
+// Get the plugin files from the plugin store
+// getGamePlugins ::
+const getNewGamePlugins = function (gameData) {
+    console.log(gameData);
+    pluginStore.query('my_index/by_id', {key: gameData.steam_appid}).then(function (res) {
+        console.log(res);
+      // got the query results
+    }).catch(function (err) {
+        console.error(err);
+      // some error
+    });
+
+    // pluginStore.get().then(console.log).catch(console.error)
+};
 
 // Get the plugin files from the passed directory
 // getGamePlugins :: String -> Promise -> Array
@@ -63,6 +99,8 @@ const renderGameDetail = function (gameData) {
     gameBackground.src = gameData.background;
 
     pluginList.innerHTML = '';
+
+    getNewGamePlugins(gameData);
 
     // Get plugins from the game directory and in the nested 'disabled' directory
     Promise.all([
