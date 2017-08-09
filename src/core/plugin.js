@@ -7,12 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const slugify = require('github-slugid');
 const { getGlobal } = require('electron').remote;
-const PouchDB = require('pouchdb');
-PouchDB.plugin(require('pouchdb-upsert'));
-
-const pluginStore = new PouchDB(
-    path.join(getGlobal('appPaths').data, 'plugins-store')
-);
+const { pluginStore } = require('./db');
 
 // Extract binaries and plugin information from zip archive and store in DB
 // installPlugin :: String, String -> Promise -> ()

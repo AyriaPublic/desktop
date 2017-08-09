@@ -6,41 +6,22 @@ const mkdirp = pify(require('mkdirp'));
 const path = require('path');
 const R = require('ramda');
 const { getGlobal } = require('electron').remote;
-const PouchDB = require('pouchdb');
 
-const pluginStore = new PouchDB(
-    path.join(getGlobal('appPaths').data, 'plugins-store')
-);
-
-// document that tells PouchDB/CouchDB
-// to build up an index on doc.name
-var ddoc = {
-  _id: '_design/my_index',
-  views: {
-    by_id: {
-      map: function (doc) { emit(doc.game.id); }.toString()
-    }
-  }
-};
-// save it
-pluginStore.put(ddoc).then(function (a) {
-  // success!
-}).catch(console.error);
-
+const { pluginStore } = require('../../core/db');
 
 // Get the plugin files from the plugin store
 // getGamePlugins ::
-const getNewGamePlugins = function (gameData) {
-    console.log(gameData);
-    pluginStore.query('my_index/by_id', {key: gameData.steam_appid}).then(function (res) {
-        console.log(res);
-      // got the query results
-    }).catch(function (err) {
-        console.error(err);
-      // some error
-    });
-
-    // pluginStore.get().then(console.log).catch(console.error)
+const getNewGamePlugins = function ({steam_appid}) {
+    pluginStore.query(
+        'plugin-index/byGameId',
+        {
+            key: steam_appid,
+            include_docs: true,
+        }
+    )
+    // [ { doc: { name, etc... } }, {} ]
+    .then(console.log)
+    .catch(console.error);
 };
 
 // Get the plugin files from the passed directory
