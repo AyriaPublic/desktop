@@ -1,3 +1,5 @@
+'use strict';
+
 const { getGlobal } = require('electron').remote;
 const path = require('path');
 const PouchDB = require('pouchdb');
@@ -8,17 +10,21 @@ const pluginStore = new PouchDB(
     path.join(getGlobal('appPaths').data, 'plugins-store')
 );
 
+// db.find({
+//   selector: {games: {$in: [steamapp_id]}}
+// });
+
 const pluginView = {
-  _id: '_design/plugin-index',
-  views: {
-    byGameId: {
-      map: String(function (doc) { emit(doc.game.id); }),
+    _id: '_design/plugin-index',
+    views: {
+        byGameId: {
+            map: 'function (doc) { emit(doc.game.id); }',
+        }
     }
-  }
 };
 
-pluginStore.putIfNotExists(pluginView)
+pluginStore.putIfNotExists(pluginView);
 
 module.exports = {
     pluginStore
-}
+};

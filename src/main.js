@@ -1,13 +1,13 @@
 'use strict';
 
 const electron = require('electron');
-const envPaths = require('env-paths')('ayria-desktop', {suffix: ''});
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected
+global.appPaths = require('./core/app-paths').setup();
+
+// Global reference of the window object to prevent it being garbage collected
 let mainWindow;
 
 const isDevelopment =
@@ -17,11 +17,6 @@ const isDevelopment =
 if (isDevelopment) {
     require('electron-reload')(__dirname);
 }
-
-global.appPaths = {
-    'cache': envPaths.cache,
-    'data': envPaths.data,
-};
 
 // Open index.html in a new browser window
 const createWindow = function () {
