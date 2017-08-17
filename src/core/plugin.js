@@ -5,13 +5,13 @@ const yauzl = require('yauzl');
 const yazl = require('yazl');
 const fs = require('fs');
 const path = require('path');
-const r = require('ramda');
+const R = require('ramda');
 const slugify = require('github-slugid');
 const { getGlobal } = require('electron').remote;
 const { pluginStore } = require('./db');
 
 // addDefaultPluginData :: Object -> Object
-const addDefaultPluginData = r.assoc('active', true);
+const addDefaultPluginData = R.assoc('active', true);
 
 // upsertPluginData :: Object -> ()
 const upsertPluginData = function (metadata) {
@@ -22,7 +22,7 @@ const upsertPluginData = function (metadata) {
 };
 
 // savePlugin :: String -> ()
-const savePlugin = r.pipe(
+const savePlugin = R.pipe(
     JSON.parse,
     addDefaultPluginData,
     upsertPluginData
