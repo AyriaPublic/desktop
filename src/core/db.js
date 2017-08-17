@@ -10,15 +10,15 @@ const pluginStore = new PouchDB(
     path.join(getGlobal('appPaths').data, 'plugins-store')
 );
 
-// db.find({
-//   selector: {games: {$in: [steamapp_id]}}
-// });
-
 const pluginView = {
     _id: '_design/plugin-index',
     views: {
         byGameId: {
-            map: 'function (doc) { emit(doc.game.id); }',
+            map: `function (doc) {
+                doc.games.forEach(function (game) {
+                    emit(game.platform + ':' + game.id, doc._id);
+                });
+            }`,
         }
     }
 };

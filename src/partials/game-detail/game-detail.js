@@ -6,11 +6,11 @@ const { pluginStore } = require('../../core/db');
 
 // Get the plugin files from the plugin store
 // getGamePlugins :: Object -> Object
-const getGamePlugins = function ({steam_appid}) {
+const getGamePlugins = function ({steam_appid: gameId}) {
     return pluginStore.query(
         'plugin-index/byGameId',
         {
-            key: steam_appid,
+            key: `steam:${gameId}`,
             include_docs: true,
         }
     )
