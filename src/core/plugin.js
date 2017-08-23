@@ -5,22 +5,36 @@ const yauzl = require('yauzl');
 const yazl = require('yazl');
 const fs = require('fs');
 const path = require('path');
+const R = require('ramda');
 const slugify = require('github-slugid');
 const { getGlobal } = require('electron').remote;
-const PouchDB = require('pouchdb');
-PouchDB.plugin(require('pouchdb-upsert'));
+const { pluginStore } = require('./db');
 
-const pluginStore = new PouchDB(
-    path.join(getGlobal('appPaths').data, 'plugins-store')
+// addDefaultPluginData :: Object -> Object
+const addDefaultPluginData = R.assoc('active', true);
+
+// upsertPluginData :: Object -> ()
+const upsertPluginData = function (metadata) {
+    pluginStore.upsert(
+        slugify(metadata.name),
+        () => metadata
+    );
+};
+
+// savePlugin :: String -> ()
+const savePlugin = R.pipe(
+    JSON.parse,
+    addDefaultPluginData,
+    upsertPluginData
 );
 
 // Extract binaries and plugin information from zip archive and store in DB
-// installPlugin :: String, String -> Promise -> ()
-const installPlugin = function (pluginPath, slug) {
+// installPlugin :: String -> Promise -> ()
+const installPlugin = function (pluginPath) {
     const pluginPackage = new yazl.ZipFile();
 
     pluginPackage.outputStream.pipe(fs.createWriteStream(path.join(
-        getGlobal('appPaths').data, slug, path.parse(pluginPath).name + '.ayria'
+        getGlobal('appPaths').data, path.parse(pluginPath).name + '.ayria'
     )));
 
     return new Promise(function (resolve, reject) {
@@ -55,9 +69,7 @@ const installPlugin = function (pluginPath, slug) {
                             entry.fileName,
                             { compress: false }
                         );
-                        readStream.pipe(concatStream(content => {
-                            storePluginMetadata(JSON.parse(content));
-                        }));
+                        readStream.pipe(concatStream(savePlugin));
                     });
                 }
             });
@@ -65,13 +77,6 @@ const installPlugin = function (pluginPath, slug) {
             zipfile.on('end', resolve);
         });
     });
-};
-
-const storePluginMetadata = function (metadata) {
-    pluginStore.upsert(
-        slugify(metadata.name),
-        () => metadata
-    );
 };
 
 module.exports = {

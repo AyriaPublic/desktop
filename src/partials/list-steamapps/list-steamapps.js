@@ -4,7 +4,6 @@ const pify = require('pify');
 const flatCache = require('flat-cache');
 const fs = pify(require('fs'), {exclude: ['createWriteStream']});
 const got = require('got');
-const mkdirp = pify(require('mkdirp'));
 const path = require('path');
 const R = require('ramda');
 const slugify = require('github-slugid');
@@ -106,7 +105,7 @@ const cacheSteamappData = function (appData) {
             .on('error', function (error) {
                 // If directory doesn't exist create it and call again
                 if (error.code === 'ENOENT') {
-                    return mkdirp(backgroundPath)
+                    return fs.mkdir(backgroundPath)
                         .then(() => resolve(cacheSteamappData(appData)))
                         .catch(function (error) {
                             // If directory already exists call again

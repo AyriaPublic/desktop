@@ -38,10 +38,7 @@ navigation.addPlugin.addEventListener('click', function (event) {
         function (filePath) {
             if (!filePath) return;
 
-            installPlugin(
-                filePath[0],
-                appSlug
-            );
+            installPlugin(filePath[0]);
         }
     );
 });

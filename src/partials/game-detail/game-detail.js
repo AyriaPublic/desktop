@@ -1,34 +1,22 @@
 'use strict';
-const pify = require('pify');
 
-const fs = pify(require('fs'));
-const mkdirp = pify(require('mkdirp'));
-const path = require('path');
 const R = require('ramda');
-const { getGlobal } = require('electron').remote;
 
-// Get the plugin files from the passed directory
-// getGamePlugins :: String -> Promise -> Array
-const getGamePlugins = function (pluginsPath, active) {
-    return fs.readdir(pluginsPath)
-        .then(R.map(path.parse))
-        // Get .ayria32 and .ayria64 files
-        .then(R.filter(file => file.ext === '.ayria'))
-        .then(R.map(file => ({
-            'name': file.name,
-            'active': active
-        })))
-        .catch(function (error) {
-            if (error.code === 'ENOENT') {
-                return mkdirp(pluginsPath)
-                    .then(getGamePlugins)
-                    .catch(function (error) {
-                        Promise.reject(error);
-                    });
-            } else {
-                Promise.reject(error);
-            }
-        });
+const { pluginStore } = require('../../core/db');
+
+// Get the plugin files from the plugin store
+// getGamePlugins :: Object -> Object
+const getGamePlugins = function ({steam_appid: gameId}) {
+    return pluginStore.query(
+        'plugin-index/byGameId',
+        {
+            key: `steam:${gameId}`,
+            include_docs: true,
+        }
+    )
+        .then(R.prop('rows'))
+        .then(R.map(R.prop('doc')))
+        .catch(console.error);
 };
 
 // Add plugin information to the DOM plugin list
@@ -39,23 +27,16 @@ const renderPlugin = function (pluginData) {
 
     // Fill in DOM nodes with data
     pluginItem.setAttribute('data-plugin-active', pluginData.active);
-    pluginItem.textContent = pluginData.name;
+    pluginItem.textContent = `${pluginData.name} - ${pluginData.version}`;
 
     // Construct and insert DOM structure
     pluginList.appendChild(pluginItem);
-};
-
-// Combine path to ayria data and slugified game name
-// getGameDirectory :: String -> String
-const getGameDirectory = function (gameSlug) {
-    return path.join(getGlobal('appPaths').data, gameSlug);
 };
 
 // Render passed game slug and data
 // renderGameDetail :: Object -> ()
 const renderGameDetail = function (gameData) {
     const gameBackground = document.querySelector('[data-game-detail-background]');
-    const gameDirectory = getGameDirectory(gameData.appSlug);
     const gameName = document.querySelector('[data-game-detail-name]');
     const pluginList = document.querySelector('[data-plugin-list]');
 
@@ -64,12 +45,7 @@ const renderGameDetail = function (gameData) {
 
     pluginList.innerHTML = '';
 
-    // Get plugins from the game directory and in the nested 'disabled' directory
-    Promise.all([
-        getGamePlugins(gameDirectory, true),
-        getGamePlugins(path.join(gameDirectory, 'disabled'), false),
-    ])
-        .then(R.flatten)
+    getGamePlugins(gameData)
         .then(R.map(renderPlugin));
 };
 
