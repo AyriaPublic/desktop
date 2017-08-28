@@ -9,7 +9,7 @@ before_script:
   - npm install
 
 script:
-  - npm run ci
+  - npm run test:ci
 
 cache:
   directories:

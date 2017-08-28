@@ -2,34 +2,16 @@
   "name": "ayria-desktop",
   "version": "0.0.0",
   "description": "GUI Electron app for the Ayria Network Platform.",
-  "keywords": [
-    "Ayria",
-    "Ayria Desktop",
-    "Electron"
-  ],
-  "homepage": "https://github.com/AyriaPublic/ayria-desktop",
-  "bugs": "https://github.com/AyriaPublic/ayria-desktop/issues",
-  "license": "GPL-3.0",
-  "contributors": [
-    "Selwyn <talk@selwyn.cc> (https://selwyn.cc/)",
-    "Will Tange <will@brt.sexy> (https://brt.sexy)"
-  ],
   "main": "src/main.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/AyriaPublic/ayria-desktop.git"
-  },
   "scripts": {
     "postinstall": "electron-rebuild",
     "start": "electron .",
     "test": "ava test",
-    "preversion": "npm test",
-    "postversion": "git push",
+    "test:ci": "run-p test 'lint -- --max-warnings 0'",
     "lint": "eslint src/*.js src/**/*.js test/*.js",
     "pack": "run-s pack:*",
     "pack:linux": "electron-packager . --platform=linux --arch=x64",
-    "pack:windows": "electron-packager . --platform=win32 --arch=x64",
-    "ci": "run-p test 'lint -- --max-warnings 0'"
+    "pack:windows": "electron-packager . --platform=win32 --arch=x64"
   },
   "dependencies": {
     "concat-stream": "^1.6.0",
@@ -58,5 +40,19 @@
     "npm-run-all": "^4.0.2",
     "semver-level-harmony": "^1.0.0",
     "spectron": "~3.7.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AyriaPublic/ayria-desktop.git"
+  },
+  "contributors": [
+    "Selwyn <talk@selwyn.cc> (https://selwyn.cc/)",
+    "Will Tange <will@brt.sexy> (https://brt.sexy)"
+  ],
+  "license": "GPL-3.0",
+  "keywords": [
+    "Ayria",
+    "Ayria Desktop",
+    "Electron"
+  ]
 }
