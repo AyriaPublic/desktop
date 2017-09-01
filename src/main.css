@@ -8,9 +8,8 @@
 }
 
 html {
-    background: #00162d;
-    box-sizing: border-box;
-    color: #f6f6f6;
+    background: #282c37;  /* fallback for old browsers */
+    color:#FFF;    
 }
 
 body {
