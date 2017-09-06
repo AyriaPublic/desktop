@@ -5,7 +5,7 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    box-shadow: 0px 2px 47px -9px rgba(0,0,0,0.48);
+    box-shadow: 0px 2px 47px -9px rgba(0,0,0,0.38);
 }
 
 .app-header-logo-container {
@@ -20,7 +20,6 @@
 
 .app-header-logo {
     height: 3rem;
-    transition: filter 0.2s;
 }
 
 .app-header-item {
@@ -31,7 +30,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transition:all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 
 .app-header-item img {
@@ -45,6 +44,6 @@
 }
 
 .app-header-item:hover {
-    background:#0080ff;
+    background: #282c37;
 }
 
