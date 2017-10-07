@@ -1,12 +1,11 @@
 'use strict';
-
 const R = require('ramda');
 
 const { pluginStore } = require('../../core/db');
 
 // Get the plugin files from the plugin store
 // getGamePlugins :: Object -> Object
-const getGamePlugins = function ({steam_appid: gameId}) {
+const getGamePlugins = function ({appid: gameId}) {
     return pluginStore.query(
         'plugin-index/byGameId',
         {
@@ -16,7 +15,6 @@ const getGamePlugins = function ({steam_appid: gameId}) {
     )
         .then(R.prop('rows'))
         .then(R.map(R.prop('doc')))
-        .catch(console.error);
 };
 
 // Add plugin information to the DOM plugin list

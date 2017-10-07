@@ -9,18 +9,18 @@ const R = require('ramda');
 const slugify = require('github-slugid');
 const { getGlobal } = require('electron').remote;
 
-const steamFsUtils = require('../../core/steam-fs');
+const steamFs = require('../../core/steam-fs');
 
 const steamappsCache = flatCache.load('steamapps', getGlobal('appPaths').cache);
 
-// Requests appInfo from the passed appId at the Steam API
-// getSteamappInfo :: String -> Promise -> Object
-const getSteamappInfo = function (appId) {
-    const steamApiUrl = 'http://store.steampowered.com/api/appdetails?appids=';
+// Fetch background URL using appId from the Steam API
+// fetchSteamappBackground :: String -> Promise -> Object
+const fetchSteamappBackground = function (appId) {
+    const steamApiUrl = 'http://store.steampowered.com/api';
 
     return new Promise(function (resolve, reject) {
         got(
-            `${steamApiUrl}${appId}&filters=basic,background`,
+            `${steamApiUrl}/appdetails?appids=${appId}&filters=background`,
             {json: true, useElectronNet: false}
         )
             .then((response) => {
@@ -31,7 +31,15 @@ const getSteamappInfo = function (appId) {
             })
             .catch(reject)
     });
-};
+}
+
+// Get all needed steamapp info
+// getSteamappInfo :: Number -> Promise -> Object
+const getSteamappInfo = (id) => Promise.all([
+    // Should check cache or not call steamFs, done double
+    steamFs.getSteamappInfo(id),
+    fetchSteamappBackground(id),
+]).then(R.mergeAll);
 
 // Render passed object appData
 // renderSteamapp :: Object -> ()
@@ -89,11 +97,11 @@ const cacheSteamappData = function (appData) {
     const backgroundPath = path.join(getGlobal('appPaths').cache, 'backgrounds');
     const appBackgroundPath = path.format({
         dir: backgroundPath,
-        name: appData.steam_appid,
+        name: appData.appid,
         ext: '.jpg'
     });
 
-    steamappsCache.setKey(appData.steam_appid, appData);
+    steamappsCache.setKey(appData.appid, appData);
 
     return new Promise(function (resolve, reject) {
         got.stream(appData.background, { useElectronNet: false })
@@ -123,18 +131,21 @@ const cacheSteamappData = function (appData) {
     });
 };
 
-const filterSteamappInfo = R.pick([
-    'name',
-    'steam_appid',
-    'background',
-]);
+const filterSteamappInfo = ({appid, common, background, config}) => ({
+  appid,
+  background,
+  name: common.name,
+  installDirectory: config.installdir,
+  launch: config.launch,
+});
 
-steamFsUtils.getSteamappsDirectories()
-    .then(paths => Promise.all(paths.map(steamFsUtils.getSteamappIds)))
+steamFs.getSteamappsDirectories()
+    .then(paths => Promise.all(paths.map(steamFs.getSteamappIds)))
     .then(R.unnest)
+    .then(R.map(Number))
     .then(R.map(R.either(
+        R.pipeP(getSteamappInfo, filterSteamappInfo, cacheSteamappData),
         R.bind(steamappsCache.getKey, steamappsCache),
-        R.pipeP(getSteamappInfo, filterSteamappInfo, cacheSteamappData)
     )))
     .then(R.forEach(function (appData) {
         Promise.resolve(appData).then(function (appData) {

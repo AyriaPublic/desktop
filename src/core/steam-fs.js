@@ -1,10 +1,11 @@
 'use strict';
 const pify = require('pify');
 
+const binaryVdf = require('binary-vdf');
 const envPaths = require('env-paths');
 const winreg = require('winreg');
 const vdf = require('vdfjs');
-const fs = pify(require('fs'));
+const fs = pify(require('fs'), {exclude: ['createReadStream']});
 const path = require('path');
 const entries = require('object.entries');
 
@@ -80,8 +81,21 @@ const getSteamappIds = function (path) {
     });
 };
 
+// Get steamapp info from appinfo.vdf file
+// getAppInfo :: Number -> Promise -> Object
+const getSteamappInfo = function (appId) {
+    return getInstallPath()
+        .then((installPath) => {
+            const vdfPath = path.join(installPath, 'appcache', 'appinfo.vdf');
+            return binaryVdf.readAppInfo(fs.createReadStream(vdfPath))
+                .then(appinfo => appinfo.find((app) => app.id === appId))
+                .then(app => app.entries);
+        });
+};
+
 module.exports = {
     getSteamLibraries,
     getSteamappsDirectories,
     getSteamappIds,
+    getSteamappInfo,
 };
