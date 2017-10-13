@@ -25,7 +25,7 @@
     "pify": "^3.0.0",
     "pouchdb": "^6.3.4",
     "pouchdb-upsert": "^2.2.0",
-    "ramda": "^0.24.1",
+    "ramda": "^0.25.0",
     "vdfjs": "^2.0.3",
     "winreg": "^1.2.4",
     "yauzl": "^2.8.0",
