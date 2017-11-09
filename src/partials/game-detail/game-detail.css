@@ -43,3 +43,11 @@
 .game-detail-content {
     padding: 1em;
 }
+
+.launch-options button {
+    padding: 1em;
+    background: #1997cc;
+    border: 0;
+    color: #fff;
+    font-weight: bold;
+}
