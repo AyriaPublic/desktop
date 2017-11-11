@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -15,8 +15,23 @@
 <body>
     <main data-main-view></main>
     <script>
-        require('./imports')
-        require('./router')
+        require('./imports');
+        require('./router');
+    </script>
+    <script>
+        document.dispatchEvent(
+            new CustomEvent('navigate', {
+                detail: {
+                    state: {
+                        headerNavigation: {
+                            previous: false,
+                            addPlugin: false,
+                        }
+                    },
+                    viewName: 'list-steamapps',
+                }
+            })
+        );
     </script>
 </body>
 

@@ -145,31 +145,33 @@ const filterSteamappInfo = ({ appid, common, background, config }) => ({
     launch: config.launch,
 });
 
-steamFs
-    .getSteamappsDirectories()
-    .then(paths => Promise.all(paths.map(steamFs.getSteamappIds)))
-    .then(R.unnest)
-    .then(
-        R.map(
-            R.either(
-                R.bind(steamappsCache.getKey, steamappsCache),
-                R.pipeP(getSteamappInfo, filterSteamappInfo, cacheSteamappData)
+const renderSteamapps = function () {
+    steamFs
+        .getSteamappsDirectories()
+        .then(paths => Promise.all(paths.map(steamFs.getSteamappIds)))
+        .then(R.unnest)
+        .then(
+            R.map(
+                R.either(
+                    R.bind(steamappsCache.getKey, steamappsCache),
+                    R.pipeP(getSteamappInfo, filterSteamappInfo, cacheSteamappData)
+                )
             )
         )
-    )
-    .then(
-        R.forEach(function (appData) {
-            Promise.resolve(appData).then(function (appData) {
-                renderSteamapp(appData);
-            });
-        })
-    )
-    .then(steamapps =>
-        Promise.all(steamapps).then(() => {
-            steamappsCache.save();
-        })
-    );
+        .then(
+            R.forEach(function (appData) {
+                Promise.resolve(appData).then(function (appData) {
+                    renderSteamapp(appData);
+                });
+            })
+        )
+        .then(steamapps =>
+            Promise.all(steamapps).then(() => {
+                steamappsCache.save();
+            })
+        );
+}
 
 module.exports = {
-    render: () => {},
+    render: renderSteamapps,
 };
