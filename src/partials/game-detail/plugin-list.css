@@ -8,6 +8,7 @@
 .plugin-list > li {
     position: relative;
     margin: 0.75em 0 0 1em;
+    list-style-type: none;
 }
 
 .plugin-list > li:first-child {
