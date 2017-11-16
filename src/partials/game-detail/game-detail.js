@@ -1,22 +1,10 @@
 'use strict';
 const R = require('ramda');
 
-const { pluginStore } = require('../../core/db');
+const { getGamePlugins, ensurePluginSymlink } = require('../../core/plugin.js');
 const { execFile } = require('child_process');
 const steamFs = require('../../core/steam-fs.js');
 const path = require('path');
-
-// Get the plugin files from the plugin store
-// getGamePlugins :: Object -> Object
-const getGamePlugins = function ({ appid: gameId }) {
-    return pluginStore
-        .query('plugin-index/byGameId', {
-            key: `steam:${gameId}`,
-            include_docs: true,
-        })
-        .then(R.prop('rows'))
-        .then(R.map(R.prop('doc')));
-};
 
 // Add plugin information to the DOM plugin list
 // renderPlugin :: Object -> ()
@@ -82,13 +70,25 @@ const renderGameDetail = function (gameData) {
     pluginList.innerHTML = '';
 
     steamFs.getSteamappLibraryDir(gameData.appid).then(libraryDir => {
+        const gameDirectory = path.join(
+            libraryDir,
+            'common',
+            gameData.installDirectory
+        );
+
         renderLaunchOption(
-            path.join(libraryDir, 'common', gameData.installDirectory),
+            gameDirectory,
             steamFs.getSteamappVdfLaunch({ launchConfig: gameData.launch })
         );
-    });
 
-    getGamePlugins(gameData).then(R.map(renderPlugin));
+        getGamePlugins(gameData)
+            .then(R.forEach(renderPlugin))
+            .then(
+                R.forEach(pluginData =>
+                    ensurePluginSymlink(gameDirectory, pluginData)
+                )
+            );
+    });
 };
 
 module.exports = {
