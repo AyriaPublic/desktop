@@ -35,7 +35,7 @@
   "devDependencies": {
     "ava": "^0.22.0",
     "electron": "~1.7.5",
-    "electron-packager": "^9.0.0",
+    "electron-packager": "^10.0.0",
     "electron-rebuild": "^1.6.0",
     "electron-reload": "^1.2.1",
     "eslint": "^4.4.1",
