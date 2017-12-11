@@ -170,7 +170,7 @@ const renderSteamapps = function () {
                 steamappsCache.save();
             })
         );
-}
+};
 
 module.exports = {
     render: renderSteamapps,

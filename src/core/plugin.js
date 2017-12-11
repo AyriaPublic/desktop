@@ -105,8 +105,8 @@ const ensurePluginSymlink = function (gameDirectory, pluginData) {
 
     mkdirp.sync(gamePluginsPath);
 
-    return new Promise(function(resolve, reject) {
-        fs[linkMethod[process.platform]](pluginPath, gamePluginPath, function(
+    return new Promise(function (resolve, reject) {
+        fs[linkMethod[process.platform]](pluginPath, gamePluginPath, function (
             error
         ) {
             if (error) {

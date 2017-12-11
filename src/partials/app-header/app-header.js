@@ -32,7 +32,7 @@ navigation.addPlugin.addEventListener('click', function (event) {
         {
             'title': 'Open Ayria plugin package',
             'filters': [
-                {'name': 'Ayria plugin package', extensions: ['zip']}
+                {'name': 'Ayria plugin package', extensions: ['zip', 'ayria']}
             ]
         },
         function (filePath) {
