@@ -9,7 +9,6 @@ const R = require('ramda');
 const slugify = require('github-slugid');
 const { getGlobal } = require('electron').remote;
 const { pluginStore } = require('./db');
-const { exec } = require('child_process');
 const mkdirp = require('mkdirp');
 
 // addDefaultPluginData :: Object -> Object
@@ -99,25 +98,27 @@ const ensurePluginSymlink = function (gameDirectory, pluginData) {
         gamePluginsPath,
         pluginData.name + '.ayria'
     );
+    const linkMethod = {
+        linux: 'symlink',
+        win32: 'link',
+    };
 
     mkdirp.sync(gamePluginsPath);
 
-    return new Promise(function (resolve, reject) {
-        fs.symlink(pluginPath, gamePluginPath, function (error) {
-            if (error && process.platform === 'win32') {
-                exec(`mklink "${gamePluginPath}" "${pluginPath}"`, function (
-                    error
-                ) {
-                    if (error && !error.message.includes('file already exists')) {
-                        reject(error);
-                    }
-                    resolve(gamePluginPath);
-                });
+    return new Promise(function(resolve, reject) {
+        fs[linkMethod[process.platform]](pluginPath, gamePluginPath, function(
+            error
+        ) {
+            if (error) {
+                if (error && !error.message.includes('file already exists')) {
+                    reject(error);
+                }
+                resolve(gamePluginPath);
             }
-
         });
     });
 };
+
 
 module.exports = {
     installPlugin,
