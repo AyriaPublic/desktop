@@ -1,7 +1,8 @@
 'use strict';
 
 const routes = require('./routes');
-const header = require('./partials/app-header/app-header');
+const inferno = require('inferno');
+// const header = require('./partials/app-header/app-header');
 
 const hideAllpartials = function () {
     const partials = document.querySelectorAll('[data-partial]');
@@ -16,8 +17,14 @@ const showPartial = function (name) {
 };
 
 document.addEventListener('navigate', function ({detail}) {
-    routes[detail.viewName].render(detail.state);
-    header.render(detail.state);
-    hideAllpartials();
-    showPartial(detail.viewName);
+    routes[detail.viewName].render(detail.state).then(nodes => {
+        console.log(nodes);
+        inferno.render(
+            nodes,
+            document.querySelector('[data-main-view]')
+        )
+    })
+    // header.render(detail.state);
+    // hideAllpartials();
+    // showPartial(detail.viewName);
 });

@@ -21,6 +21,8 @@
     "flat-cache": "^1.2.2",
     "github-slugid": "^1.0.1",
     "got": "^7.1.0",
+    "inferno": "^3.10.1",
+    "inferno-create-element": "^3.10.1",
     "mkdirp": "^0.5.1",
     "object.entries": "^1.0.4",
     "pify": "^3.0.0",

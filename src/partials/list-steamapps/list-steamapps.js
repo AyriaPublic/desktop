@@ -4,6 +4,7 @@ const pify = require('pify');
 const flatCache = require('flat-cache');
 const fs = pify(require('fs'), { exclude: ['createWriteStream'] });
 const got = require('got');
+const node = require('inferno-create-element');
 const path = require('path');
 const R = require('ramda');
 const slugify = require('github-slugid');
@@ -44,25 +45,24 @@ const getSteamappInfo = id =>
 // Render passed object appData
 // renderSteamapp :: Object -> ()
 const renderSteamapp = function (appData) {
-    const gamesListElement = document.querySelector(
-        '[data-list-steamapps] > ul'
-    );
+    return node(
+        'li',
+        {},
+        node(
+            'a',
+            { onClick: handleClick},
+            node(
+                'figure',
+                {},
+                [
+                    node('img', { src: appData.background }),
+                    node('figcaption', {}, appData.name),
+                ]
+            )
+        )
+    )
 
-    const appItem = document.createElement('li');
-    const appLink = document.createElement('a');
-    const appContainer = document.createElement('figure');
-    const appName = document.createElement('figcaption');
-    const appBackground = document.createElement('img');
-
-    // Slugify steamapp name
-    const appSlug = slugify(String(appData.name));
-
-    // Fill in DOM nodes with data
-    appName.textContent = appData.name;
-    appBackground.src = appData.background;
-    appBackground.alt = '';
-
-    appLink.addEventListener('click', function (event) {
+    function handleClick (event) {
         event.preventDefault();
 
         document.dispatchEvent(
@@ -71,7 +71,7 @@ const renderSteamapp = function (appData) {
                     state: Object.assign(
                         {},
                         appData,
-                        { appSlug },
+                        { appSlug: slugify(String(appData.name)) },
                         {
                             headerNavigation: {
                                 previous: true,
@@ -83,14 +83,7 @@ const renderSteamapp = function (appData) {
                 },
             })
         );
-    });
-
-    // Construct and insert DOM structure
-    appItem.appendChild(appLink);
-    appLink.appendChild(appContainer);
-    appContainer.appendChild(appName);
-    appContainer.appendChild(appBackground);
-    gamesListElement.appendChild(appItem);
+    };
 };
 
 // Takes steamappData, downloads the background and save the data to the cache
@@ -146,7 +139,7 @@ const filterSteamappInfo = ({ appid, common, background, config }) => ({
 });
 
 const renderSteamapps = function () {
-    steamFs
+    return steamFs
         .getSteamappsDirectories()
         .then(paths => Promise.all(paths.map(steamFs.getSteamappIds)))
         .then(R.unnest)
@@ -158,19 +151,31 @@ const renderSteamapps = function () {
                 )
             )
         )
-        .then(
-            R.forEach(function (appData) {
-                Promise.resolve(appData).then(function (appData) {
-                    renderSteamapp(appData);
-                });
-            })
-        )
-        .then(steamapps =>
-            Promise.all(steamapps).then(() => {
-                steamappsCache.save();
-            })
-        );
+        // .then(steamapps =>
+        //     Promise.all(steamapps).then(() => {
+        //         steamappsCache.save();
+        //     })
+        // )
+        .then(appDatas => Promise.all(appDatas)
+            .then(appDatas => (
+                node(
+                    'ul',
+                    { className: 'list-steamapps' },
+                    appDatas.map(appData => renderSteamapp(appData))
+                )
+            )
+        ))
+        // .then(R.forEach(function (appData) {
+        //     return Promise.resolve(appData).then(function (appData) {
+        //         return node(
+        //             'ul',
+        //             { className: 'list-steamapps' },
+        //             'renderSteamapp(appData)'
+        //         )
+        //     });
+        // }))
 };
+
 
 module.exports = {
     render: renderSteamapps,
