@@ -12,7 +12,7 @@ const { getGlobal } = require('electron').remote;
 
 const steamFs = require('../../core/steam-fs');
 
-const steamappsCache = flatCache.load('steamapps', getGlobal('appPaths').cache);
+const steamappsCache = flatCache.create('steamapps', getGlobal('appPaths').cache);
 
 // Fetch background URL using appId from the Steam API
 // fetchSteamappBackground :: String -> Promise -> Object
@@ -151,29 +151,15 @@ const renderSteamapps = function () {
                 )
             )
         )
-        // .then(steamapps =>
-        //     Promise.all(steamapps).then(() => {
-        //         steamappsCache.save();
-        //     })
-        // )
-        .then(appDatas => Promise.all(appDatas)
-            .then(appDatas => (
-                node(
-                    'ul',
-                    { className: 'list-steamapps' },
-                    appDatas.map(appData => renderSteamapp(appData))
-                )
+        .then(Promise.all.bind(Promise))
+        .then(R.tap(() => steamappsCache.save(false)))
+        .then(steamapps => (
+            node(
+                'ul',
+                { 'className': 'list-steamapps' },
+                steamapps.map(appData => renderSteamapp(appData))
             )
         ))
-        // .then(R.forEach(function (appData) {
-        //     return Promise.resolve(appData).then(function (appData) {
-        //         return node(
-        //             'ul',
-        //             { className: 'list-steamapps' },
-        //             'renderSteamapp(appData)'
-        //         )
-        //     });
-        // }))
 };
 
 
