@@ -22,8 +22,8 @@ document.addEventListener('navigate', function ({detail}) {
         inferno.render(
             nodes,
             document.querySelector('[data-main-view]')
-        )
-    })
+        );
+    });
     // header.render(detail.state);
     // hideAllpartials();
     // showPartial(detail.viewName);

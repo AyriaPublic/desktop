@@ -31,13 +31,6 @@ const renderGameDetailHeader = (gameData) => node(
     ]
 );
 
-// renderPlugin :: Object -> Object
-const renderPlugin = (pluginData) => node(
-    'li',
-    { 'data-plugin-active': pluginData.active },
-    `${pluginData.name} - ${pluginData.version}`
-);
-
 // Render button to launch game
 // renderLauncher :: String, Object -> Object
 const renderLauncher = (execDir, launchConfig) => node(
@@ -68,56 +61,55 @@ const renderLauncher = (execDir, launchConfig) => node(
     `Launch ${launchConfig['executable']}`
 );
 
+// renderPlugin :: Object -> Object
+const renderPlugin = (pluginData) => node(
+    'li',
+    { 'data-plugin-active': pluginData.active },
+    `${pluginData.name} - ${pluginData.version}`
+);
 
-const renderGameDetailContent = (plugins) => node(
-    'main',
-    { 'className': 'game-detail-content' },
+// renderGameDetailPlugins :: [Object] -> Object
+const renderGameDetailPlugins = (plugins) => node(
+    'section',
+    { 'className': 'game-detail-plugins' },
     [
-        // launch button here
         node('h2', null, 'Installed plugins'),
         node(
             'ul',
             { 'className': 'plugin-list' },
-            plugins
+            plugins.map(renderPlugin)
         )
     ]
-)
+);
 
 // Render passed game slug and data
 // renderGameDetail :: Object -> ()
 const renderGameDetail = function (gameData) {
-    return steamFs.getSteamappLibraryDir(gameData.appid).then(libraryDir => {
-        const gameDirectory = path.join(
-            libraryDir,
-            'common',
-            gameData.installDirectory
-        );
-
-        console.log('gameData', gameData);
-
-        return getGamePlugins(gameData)
-            .then(R.tap(console.log))
-            .then(R.map(renderPlugin))
-            .then(
-                R.forEach(pluginData =>
-                    ensurePluginSymlink(gameDirectory, pluginData)
+    return steamFs.getSteamappLibraryDir(gameData.appid)
+    .then(libraryDir => path.join(
+        libraryDir,
+        'common',
+        gameData.installDirectory
+    ))
+    .then(gameDirectory => getGamePlugins(gameData)
+        .then(R.forEach(pluginData =>
+            ensurePluginSymlink(gameDirectory, pluginData)
+        ))
+        .then((plugins) => node(
+            'section',
+            null,
+            [
+                renderGameDetailHeader(gameData),
+                renderGameDetailPlugins(plugins),
+                renderLauncher(
+                    gameDirectory,
+                    steamFs.getSteamappVdfLaunch({
+                        launchConfig: gameData.launch
+                    })
                 )
-            )
-            .then((plugins) => {
-                return node(
-                    'section',
-                    null,
-                    [
-                        renderGameDetailHeader(gameData),
-                        renderGameDetailContent(plugins),
-                        renderLauncher(
-                            gameDirectory,
-                            steamFs.getSteamappVdfLaunch({ launchConfig: gameData.launch })
-                        )
-                    ]
-                )
-            })
-    });
+            ]
+        ))
+    )
 };
 
 module.exports = {
