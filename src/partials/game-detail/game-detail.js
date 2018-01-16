@@ -1,6 +1,7 @@
 'use strict';
 const R = require('ramda');
 
+const appHeader = require('../app-header/app-header.js');
 const { getGamePlugins, ensurePluginSymlink } = require('../../core/plugin.js');
 const { execFile } = require('child_process');
 const node = require('inferno-create-element');
@@ -99,6 +100,7 @@ const renderGameDetail = function (gameData) {
             'section',
             null,
             [
+                appHeader.render(['previous', 'addPlugin']),
                 renderGameDetailHeader(gameData),
                 renderGameDetailPlugins(plugins),
                 renderLauncher(

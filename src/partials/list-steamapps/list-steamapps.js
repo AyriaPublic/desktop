@@ -11,6 +11,7 @@ const slugify = require('github-slugid');
 const { getGlobal } = require('electron').remote;
 
 const steamFs = require('../../core/steam-fs');
+const appHeader = require('../app-header/app-header.js');
 
 const steamappsCache = flatCache.create('steamapps', getGlobal('appPaths').cache);
 
@@ -153,12 +154,17 @@ const renderSteamapps = function () {
         )
         .then(Promise.all.bind(Promise))
         .then(R.tap(() => steamappsCache.save(false)))
-        .then(steamapps => (
-            node(
-                'ul',
-                { 'className': 'list-steamapps' },
-                steamapps.map(appData => renderSteamapp(appData))
-            )
+        .then(steamapps => node(
+            'section',
+            null,
+            [
+                appHeader.render(),
+                node(
+                    'ul',
+                    { 'className': 'list-steamapps' },
+                    steamapps.map(appData => renderSteamapp(appData))
+                )
+            ]
         ))
 };
 
