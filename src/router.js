@@ -1,30 +1,43 @@
 'use strict';
 
 const routes = require('./routes');
-const inferno = require('inferno');
-// const header = require('./partials/app-header/app-header');
+const { app, h: node } = require('hyperapp');
 
-const hideAllpartials = function () {
-    const partials = document.querySelectorAll('[data-partial]');
+const gameDetail = require('./partials/game-detail/game-detail');
+const listSteamapps = require('./partials/list-steamapps/list-steamapps');
 
-    for (let partial of partials) {
-        partial.classList.remove('is-shown');
-    }
-};
+const navigate = viewName => state => Object.assign({}, state, {viewName})
 
-const showPartial = function (name) {
-    document.querySelector(`[data-${name}]`).classList.add('is-shown');
-};
-
-document.addEventListener('navigate', function ({detail}) {
-    routes[detail.viewName].render(detail.state).then(nodes => {
-        console.log('nodes', nodes);
-        inferno.render(
-            nodes,
-            document.querySelector('[data-main-view]')
-        );
-    });
-    // header.render(detail.state);
-    // hideAllpartials();
-    // showPartial(detail.viewName);
+document.addEventListener('navigate', function ({ detail }) {
+    navigate(detail.viewName)
 });
+
+app(
+    Object.assign(
+        { viewName: 'list-steamapps' },
+        { 'listSteamapps': listSteamapps.state },
+        { 'gameDetail': gameDetail.state },
+    ),
+    {
+        'listSteamapps': listSteamapps.actions,
+        'gameDetail': gameDetail.actions,
+        'navigate': navigate,
+    },
+    (state, actions) => {
+        debugger;
+        return node('main', {}, [
+            state.viewName === 'list-steamapps' &&
+                routes[state.viewName].view(
+                    state,
+                    actions,
+                ),
+            state.viewName === 'game-detail' &&
+                routes[state.viewName].view(
+                    // Object.assign({}, routes['gameDetail'].state, state),
+                    state,
+                    actions,
+                ),
+        ])
+    },
+    document.body,
+);

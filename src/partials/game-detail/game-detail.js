@@ -1,30 +1,31 @@
 'use strict';
+
+const { execFile } = require('child_process');
+const { h: node } = require('hyperapp');
+const path = require('path');
 const R = require('ramda');
 
 const appHeader = require('../app-header/app-header.js');
 const { getGamePlugins, ensurePluginSymlink } = require('../../core/plugin.js');
-const { execFile } = require('child_process');
-const node = require('inferno-create-element');
 const steamFs = require('../../core/steam-fs.js');
-const path = require('path');
 
 // renderGameDetailHeader :: Object -> Object
 const renderGameDetailHeader = (gameData) => node(
     'header',
-    { 'className': 'game-detail-header' },
+    { 'class': 'game-detail-header' },
     [
         node(
             'h1',
-            { 'className': 'game-detail-title' },
+            { 'class': 'game-detail-title' },
             gameData.name,
         ),
         node(
             'div',
-            { 'className': 'game-detail-background-wrapper' },
+            { 'class': 'game-detail-background-wrapper' },
             node(
                 'img',
                 {
-                    'className': 'game-detail-background',
+                    'class': 'game-detail-background',
                     'src': gameData.background
                 }
             ),
@@ -72,12 +73,12 @@ const renderPlugin = (pluginData) => node(
 // renderGameDetailPlugins :: [Object] -> Object
 const renderGameDetailPlugins = (plugins) => node(
     'section',
-    { 'className': 'game-detail-plugins' },
+    { 'class': 'game-detail-plugins' },
     [
-        node('h2', null, 'Installed plugins'),
+        node('h2', {}, 'Installed plugins'),
         node(
             'ul',
-            { 'className': 'plugin-list' },
+            { 'class': 'plugin-list' },
             plugins.map(renderPlugin)
         )
     ]
@@ -87,33 +88,55 @@ const renderGameDetailPlugins = (plugins) => node(
 // renderGameDetail :: Object -> ()
 const renderGameDetail = function (gameData) {
     return steamFs.getSteamappLibraryDir(gameData.appid)
-    .then(libraryDir => path.join(
-        libraryDir,
-        'common',
-        gameData.installDirectory
-    ))
-    .then(gameDirectory => getGamePlugins(gameData)
-        .then(R.forEach(pluginData =>
-            ensurePluginSymlink(gameDirectory, pluginData)
+        .then(libraryDir => path.join(
+            libraryDir,
+            'common',
+            gameData.installDirectory
         ))
-        .then((plugins) => node(
-            'section',
-            null,
-            [
-                appHeader.render(['previous', 'addPlugin']),
-                renderGameDetailHeader(gameData),
-                renderGameDetailPlugins(plugins),
-                renderLauncher(
-                    gameDirectory,
-                    steamFs.getSteamappVdfLaunch({
-                        launchConfig: gameData.launch
-                    })
-                )
-            ]
-        ))
-    )
+        .then(gameDirectory => getGamePlugins(gameData)
+            .then(R.forEach(pluginData =>
+                ensurePluginSymlink(gameDirectory, pluginData)
+            ))
+            .then((plugins) => node(
+                'section',
+                null,
+                [
+                    appHeader.render(['previous', 'addPlugin']),
+                    renderGameDetailHeader(gameData),
+                    renderGameDetailPlugins(plugins),
+                    renderLauncher(
+                        gameDirectory,
+                        steamFs.getSteamappVdfLaunch({
+                            launchConfig: gameData.launch
+                        })
+                    )
+                ]
+            ))
+        )
 };
 
 module.exports = {
-    render: renderGameDetail,
+    state: {
+        plugins: []
+    },
+    actions: {
+        getGamePlugins: () => (state, actions) => {
+            debugger;
+            return getGamePlugins(state)
+                .then(actions.setPlugins)
+        },
+        setPlugins: plugins => ({ plugins }),
+        wat: () => (state, actions) => {
+            console.log('ᕙ〳 ರ ︿ ರೃ 〵ᕗ');
+        }
+    },
+    view: (state, actions) => {debugger; return node(
+        'section',
+        { key: 'unsdilfj', 'oncreate': actions.gameDetail.getGamePlugins },
+        [
+            // appHeader.render(['previous', 'addPlugin']),
+            // renderGameDetailHeader(state),
+            renderGameDetailPlugins(state.gameDetail.plugins),
+        ]
+    )}
 };

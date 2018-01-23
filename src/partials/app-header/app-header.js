@@ -1,18 +1,18 @@
 'use strict';
 const dialog = require('electron').remote.dialog;
-const node = require('inferno-create-element');
+const { h: node } = require('hyperapp');
 const { installPlugin } = require('../../core/plugin');
 
-const renderHeaderItem = ({ iconName, onClick }) => node(
+const renderHeaderItem = ({ iconName, onclick }) => node(
     'a',
-    { 'className': 'app-header-item', onClick},
+    { 'class': 'app-header-item', onclick},
     node('img', { 'src': `./assets/${iconName}.svg`, alt: '' })
 );
 
 const headerItems = {
     previous: () => renderHeaderItem({
         'iconName': 'arrow-left-icon',
-        'onClick': function (event) {
+        'onclick': function (event) {
             event.preventDefault();
             document.dispatchEvent(
                 new CustomEvent('navigate', {
@@ -31,7 +31,7 @@ const headerItems = {
     }),
     addPlugin: () => renderHeaderItem({
         'iconName': 'plus-icon',
-        'onClick': function (event) {
+        'onclick': function (event) {
             event.preventDefault();
             dialog.showOpenDialog(
                 {
@@ -53,13 +53,13 @@ const headerItems = {
 const renderHeader = function (activeItems = []) {
     return node(
         'nav',
-        { 'className': 'app-header' },
+        { 'class': 'app-header' },
         [
             activeItems.map(name => headerItems[name]()),
-            node('div', {'className': 'app-header-logo-container'}, node(
+            node('div', {'class': 'app-header-logo-container'}, node(
                 'img',
                 {
-                    'className': 'app-header-logo',
+                    'class': 'app-header-logo',
                     'src': './assets/ayria-logo.png',
                     'alt': 'Ayria logo'
                 }

@@ -78,7 +78,7 @@ const installPlugin = function (pluginPath) {
 };
 
 // Get the plugin files from the plugin store
-// getGamePlugins :: Object -> Object
+// getGamePlugins :: Object -> Promise -> Object
 const getGamePlugins = function ({ appid: gameId }) {
     return pluginStore
         .query('plugin-index/byGameId', {
