@@ -1,0 +1,9 @@
+/* core styling */
+@import "core-styling/layout.css";
+@import "core-styling/main.css";
+@import "core-styling/typography.css";
+
+/* partials */
+@import "./partials/app-header/app-header.css";
+@import "./partials/game-detail/game-detail.css";
+@import "./partials/list-steamapps/list-steamapps.css";

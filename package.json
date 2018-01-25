@@ -14,6 +14,7 @@
     "pack:windows": "electron-packager . --platform=win32 --arch=x64"
   },
   "dependencies": {
+    "@hyperapp/router": "^0.4.1",
     "arch": "^2.1.0",
     "binary-vdf": "^0.1.0",
     "concat-stream": "^1.6.0",
@@ -21,6 +22,7 @@
     "flat-cache": "^1.2.2",
     "github-slugid": "^1.0.1",
     "got": "^7.1.0",
+    "hyperapp": "^1.0.2",
     "mkdirp": "^0.5.1",
     "object.entries": "^1.0.4",
     "pify": "^3.0.0",

@@ -1,23 +1,35 @@
 'use strict';
 
-const routes = require('./routes');
-const header = require('./partials/app-header/app-header');
+const partials = require('./partials.js');
+const { app, h: node } = require('hyperapp');
 
-const hideAllpartials = function () {
-    const partials = document.querySelectorAll('[data-partial]');
+const { mergeDeepRight, prop } = require('ramda');
 
-    for (let partial of partials) {
-        partial.classList.remove('is-shown');
-    }
-};
+const main = app(
+    Object.assign(
+        ...Object.values(partials).map(prop('state'))
+    ),
+    Object.assign(
+        {
+            'mergeState': newState => state => mergeDeepRight(state, newState)
+        },
+        ...Object.values(partials).map(prop('actions'))
+    ),
+    (state, actions) => node('main', {}, [
+            state.viewName === 'list-steamapps' &&
+                partials[state.viewName].view(
+                    state,
+                    actions,
+                ),
+            state.viewName === 'game-detail' &&
+                partials[state.viewName].view(
+                    state,
+                    actions,
+                ),
+        ]),
+    document.body,
+);
 
-const showPartial = function (name) {
-    document.querySelector(`[data-${name}]`).classList.add('is-shown');
-};
-
-document.addEventListener('navigate', function ({detail}) {
-    routes[detail.viewName].render(detail.state);
-    header.render(detail.state);
-    hideAllpartials();
-    showPartial(detail.viewName);
+document.addEventListener('navigate', function ({ detail }) {
+    main.mergeState(detail);
 });

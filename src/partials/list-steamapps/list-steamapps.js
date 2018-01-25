@@ -1,17 +1,19 @@
 'use strict';
 const pify = require('pify');
 
+const { getGlobal } = require('electron').remote;
 const flatCache = require('flat-cache');
 const fs = pify(require('fs'), { exclude: ['createWriteStream'] });
+const slugify = require('github-slugid');
 const got = require('got');
+const { h: node } = require('hyperapp');
 const path = require('path');
 const R = require('ramda');
-const slugify = require('github-slugid');
-const { getGlobal } = require('electron').remote;
 
 const steamFs = require('../../core/steam-fs');
+const appHeader = require('../app-header/app-header.js');
 
-const steamappsCache = flatCache.load('steamapps', getGlobal('appPaths').cache);
+const steamappsCache = flatCache.create('steamapps', getGlobal('appPaths').cache);
 
 // Fetch background URL using appId from the Steam API
 // fetchSteamappBackground :: String -> Promise -> Object
@@ -35,63 +37,13 @@ const fetchSteamappBackground = function (appId) {
 
 // Get all needed steamapp info
 // getSteamappInfo :: Number -> Promise -> Object
-const getSteamappInfo = id =>
+const getSteamappInfo = id => (
     Promise.all([
         steamFs.getAppInfo(id),
         fetchSteamappBackground(id),
-    ]).then(R.mergeAll);
-
-// Render passed object appData
-// renderSteamapp :: Object -> ()
-const renderSteamapp = function (appData) {
-    const gamesListElement = document.querySelector(
-        '[data-list-steamapps] > ul'
-    );
-
-    const appItem = document.createElement('li');
-    const appLink = document.createElement('a');
-    const appContainer = document.createElement('figure');
-    const appName = document.createElement('figcaption');
-    const appBackground = document.createElement('img');
-
-    // Slugify steamapp name
-    const appSlug = slugify(String(appData.name));
-
-    // Fill in DOM nodes with data
-    appName.textContent = appData.name;
-    appBackground.src = appData.background;
-    appBackground.alt = '';
-
-    appLink.addEventListener('click', function (event) {
-        event.preventDefault();
-
-        document.dispatchEvent(
-            new CustomEvent('navigate', {
-                detail: {
-                    state: Object.assign(
-                        {},
-                        appData,
-                        { appSlug },
-                        {
-                            headerNavigation: {
-                                previous: true,
-                                addPlugin: true,
-                            },
-                        }
-                    ),
-                    viewName: 'game-detail',
-                },
-            })
-        );
-    });
-
-    // Construct and insert DOM structure
-    appItem.appendChild(appLink);
-    appLink.appendChild(appContainer);
-    appContainer.appendChild(appName);
-    appContainer.appendChild(appBackground);
-    gamesListElement.appendChild(appItem);
-};
+    ])
+    .then(R.mergeAll)
+);
 
 // Takes steamappData, downloads the background and save the data to the cache
 // cacheSteamappData :: Object -> Promise -> Object
@@ -137,6 +89,7 @@ const cacheSteamappData = function (appData) {
     });
 };
 
+// filterSteamappInfo :: Object -> Object
 const filterSteamappInfo = ({ appid, common, background, config }) => ({
     appid,
     background,
@@ -145,33 +98,103 @@ const filterSteamappInfo = ({ appid, common, background, config }) => ({
     launch: config.launch,
 });
 
-const renderSteamapps = function () {
-    steamFs
-        .getSteamappsDirectories()
-        .then(paths => Promise.all(paths.map(steamFs.getSteamappIds)))
-        .then(R.unnest)
-        .then(
-            R.map(
-                R.either(
-                    R.bind(steamappsCache.getKey, steamappsCache),
-                    R.pipeP(getSteamappInfo, filterSteamappInfo, cacheSteamappData)
-                )
+// Render passed object appData
+// renderSteamapp :: Object -> ()
+const renderSteamapp = function (appData, actions) {
+    return node(
+        'li',
+        {},
+        node(
+            'a',
+            { onclick },
+            node(
+                'figure',
+                {},
+                [
+                    node('img', { src: appData.background }),
+                    node('figcaption', {}, appData.name),
+                ]
             )
         )
-        .then(
-            R.forEach(function (appData) {
-                Promise.resolve(appData).then(function (appData) {
-                    renderSteamapp(appData);
-                });
-            })
-        )
-        .then(steamapps =>
-            Promise.all(steamapps).then(() => {
-                steamappsCache.save();
+    )
+
+    function onclick (event) {
+        event.preventDefault();
+
+        document.dispatchEvent(
+            new CustomEvent('navigate', {
+                detail: Object.assign(
+                    {},
+                    {
+                        'gameDetail': {
+                            appData,
+                            // appSlug: slugify(String(appData.name)),
+                        },
+                    },
+                    { viewName: 'game-detail' },
+                    {
+                        headerNavigation: {
+                            previous: true,
+                            addPlugin: true,
+                        },
+                    }
+                )
             })
         );
+    };
 };
 
 module.exports = {
-    render: renderSteamapps,
+    state: { 'listSteamapps': {
+            games: [],
+    } },
+    actions: { 'listSteamapps': {
+        getGames: () => (state, actions) => {
+            return steamFs
+                .getSteamappsDirectories()
+                .then(paths => Promise.all(paths.map(steamFs.getSteamappIds)))
+                .then(R.unnest)
+                .then(
+                    R.map(
+                        R.either(
+                            R.bind(steamappsCache.getKey, steamappsCache),
+                            R.pipeP(
+                                getSteamappInfo,
+                                filterSteamappInfo,
+                                cacheSteamappData
+                            )
+                        )
+                    )
+                )
+                .then(
+                    R.tap(
+                        R.map(gameData =>
+                            Promise.resolve(gameData).then(actions.addGame)
+                        )
+                    )
+                )
+                .then(Promise.all.bind(Promise))
+                .then(R.tap(() => steamappsCache.save(false)));
+        },
+        addGame: gameData => (state, actions) => {
+            return ({
+                    games: state.games.concat([renderSteamapp(gameData, actions)]),
+            })
+        },
+    } },
+    view: (state, actions) => node(
+        'section',
+        { key: 'list-steamapps' },
+        [
+            appHeader.render(),
+            node(
+                'ul',
+                {
+                    'class': 'list-steamapps',
+                    'oncreate': actions.listSteamapps.getGames,
+                },
+                state.listSteamapps.games
+            )
+        ]
+    )
 };
