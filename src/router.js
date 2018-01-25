@@ -1,43 +1,35 @@
 'use strict';
 
-const routes = require('./routes');
+const partials = require('./partials.js');
 const { app, h: node } = require('hyperapp');
 
-const gameDetail = require('./partials/game-detail/game-detail');
-const listSteamapps = require('./partials/list-steamapps/list-steamapps');
+const { mergeDeepRight, prop } = require('ramda');
 
-const navigate = viewName => state => Object.assign({}, state, {viewName})
-
-document.addEventListener('navigate', function ({ detail }) {
-    navigate(detail.viewName)
-});
-
-app(
+const main = app(
     Object.assign(
-        { viewName: 'list-steamapps' },
-        { 'listSteamapps': listSteamapps.state },
-        { 'gameDetail': gameDetail.state },
+        ...Object.values(partials).map(prop('state'))
     ),
-    {
-        'listSteamapps': listSteamapps.actions,
-        'gameDetail': gameDetail.actions,
-        'navigate': navigate,
-    },
-    (state, actions) => {
-        debugger;
-        return node('main', {}, [
+    Object.assign(
+        {
+            'mergeState': newState => state => mergeDeepRight(state, newState)
+        },
+        ...Object.values(partials).map(prop('actions'))
+    ),
+    (state, actions) => node('main', {}, [
             state.viewName === 'list-steamapps' &&
-                routes[state.viewName].view(
+                partials[state.viewName].view(
                     state,
                     actions,
                 ),
             state.viewName === 'game-detail' &&
-                routes[state.viewName].view(
-                    // Object.assign({}, routes['gameDetail'].state, state),
+                partials[state.viewName].view(
                     state,
                     actions,
                 ),
-        ])
-    },
+        ]),
     document.body,
 );
+
+document.addEventListener('navigate', function ({ detail }) {
+    main.mergeState(detail);
+});

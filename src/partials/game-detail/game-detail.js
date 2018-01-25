@@ -116,27 +116,23 @@ const renderGameDetail = function (gameData) {
 };
 
 module.exports = {
-    state: {
-        plugins: []
-    },
-    actions: {
-        getGamePlugins: () => (state, actions) => {
-            debugger;
-            return getGamePlugins(state)
+    state: { 'gameDetail': {
+        plugins: [],
+    } },
+    actions: { 'gameDetail': {
+        getGamePlugins: () => (state, actions) => (
+            getGamePlugins(state.appData)
                 .then(actions.setPlugins)
-        },
+        ),
         setPlugins: plugins => ({ plugins }),
-        wat: () => (state, actions) => {
-            console.log('ᕙ〳 ರ ︿ ರೃ 〵ᕗ');
-        }
-    },
-    view: (state, actions) => {debugger; return node(
+    } },
+    view: (state, actions) => node(
         'section',
-        { key: 'unsdilfj', 'oncreate': actions.gameDetail.getGamePlugins },
+        { key: 'game-detail', 'oncreate': actions.gameDetail.getGamePlugins },
         [
-            // appHeader.render(['previous', 'addPlugin']),
-            // renderGameDetailHeader(state),
+            appHeader.render(['previous', 'addPlugin']),
+            renderGameDetailHeader(state.gameDetail.appData),
             renderGameDetailPlugins(state.gameDetail.plugins),
         ]
-    )}
+    )
 };

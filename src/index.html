@@ -10,14 +10,14 @@
 <body>
     <main data-main-view></main>
     <script>
-        require('./router');
+        require('./router.js');
     </script>
     <script>
-        // document.dispatchEvent(
-        //     new CustomEvent('navigate', {
-        //         detail: { viewName: 'list-steamapps' }
-        //     })
-        // );
+        document.dispatchEvent(
+            new CustomEvent('navigate', {
+                detail: { viewName: 'list-steamapps' }
+            })
+        );
     </script>
 </body>
 

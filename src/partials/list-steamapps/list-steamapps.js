@@ -120,48 +120,36 @@ const renderSteamapp = function (appData, actions) {
 
     function onclick (event) {
         event.preventDefault();
-        actions.navigate({'viewName': 'wat'})
-        // actions.navigate(Object.assign(
-        //     {},
-        //     { 'viewName': 'game-detail' },
-        //     appData,
-        //     { 'appSlug': slugify(String(appData.name)) },
-        //     {
-        //         'headerNavigation': {
-        //             previous: true,
-        //             addPlugin: true,
-        //         },
-        //     }
-        // ))
 
-        // document.dispatchEvent(
-        //     new CustomEvent('navigate', {
-        //         detail: {
-        //             state: Object.assign(
-        //                 {},
-        //                 appData,
-        //                 { appSlug: slugify(String(appData.name)) },
-        //                 {
-        //                     headerNavigation: {
-        //                         previous: true,
-        //                         addPlugin: true,
-        //                     },
-        //                 }
-        //             ),
-        //             viewName: 'game-detail',
-        //         },
-        //     })
-        // );
+        document.dispatchEvent(
+            new CustomEvent('navigate', {
+                detail: Object.assign(
+                    {},
+                    {
+                        'gameDetail': {
+                            appData,
+                            // appSlug: slugify(String(appData.name)),
+                        },
+                    },
+                    { viewName: 'game-detail' },
+                    {
+                        headerNavigation: {
+                            previous: true,
+                            addPlugin: true,
+                        },
+                    }
+                )
+            })
+        );
     };
 };
 
 module.exports = {
-    state: {
-        games: [],
-    },
-    actions: {
+    state: { 'listSteamapps': {
+            games: [],
+    } },
+    actions: { 'listSteamapps': {
         getGames: () => (state, actions) => {
-
             return steamFs
                 .getSteamappsDirectories()
                 .then(paths => Promise.all(paths.map(steamFs.getSteamappIds)))
@@ -189,19 +177,14 @@ module.exports = {
                 .then(R.tap(() => steamappsCache.save(false)));
         },
         addGame: gameData => (state, actions) => {
-            debugger;
             return ({
                     games: state.games.concat([renderSteamapp(gameData, actions)]),
             })
         },
-        // navigate: (newState) => state => {
-        //     debugger;
-        //     return newState
-        // },
-    },
-    view: (state, actions) => { return node(
+    } },
+    view: (state, actions) => node(
         'section',
-        { key: 'list-unsdilfj' },
+        { key: 'list-steamapps' },
         [
             appHeader.render(),
             node(
@@ -213,5 +196,5 @@ module.exports = {
                 state.listSteamapps.games
             )
         ]
-    )}
+    )
 };
