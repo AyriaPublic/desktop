@@ -29,7 +29,7 @@
     "ramda": "^0.24.1",
     "vdfjs": "^2.0.3",
     "winreg": "^1.2.4",
-    "yauzl": "^2.8.0",
+    "yauzl": "^2.0.0",
     "yazl": "^2.4.2"
   },
   "devDependencies": {
