@@ -39,7 +39,7 @@
     "electron-rebuild": "^1.6.0",
     "electron-reload": "^1.2.1",
     "eslint": "^4.4.1",
-    "npm-run-all": "^4.0.2",
+    "npm-run-all": "^4.0.0",
     "semver-level-harmony": "^1.0.0",
     "spectron": "~3.7.2"
   },
