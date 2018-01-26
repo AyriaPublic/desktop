@@ -30,7 +30,7 @@
     "vdfjs": "^2.0.3",
     "winreg": "^1.2.4",
     "yauzl": "^2.8.0",
-    "yazl": "^2.4.2"
+    "yazl": "^2.0.0"
   },
   "devDependencies": {
     "ava": "^0.24.0",
