@@ -1,59 +1,69 @@
 'use strict';
 const dialog = require('electron').remote.dialog;
+const { h: node } = require('hyperapp');
 const { installPlugin } = require('../../core/plugin');
 
-const navigation = {
-    previous: document.querySelector('[data-app-header-previous]'),
-    addPlugin: document.querySelector('[data-app-header-add-plugin]'),
-};
+const renderHeaderItem = ({ iconName, onclick }) => node(
+    'a',
+    { 'class': 'app-header-item', onclick},
+    node('img', { 'src': `./assets/${iconName}.svg`, alt: '' })
+);
 
-let appSlug;
-
-navigation.previous.addEventListener('click', function (event) {
-    event.preventDefault();
-    document.dispatchEvent(
-        new CustomEvent('navigate', {
-            detail: {
-                state: {
-                    headerNavigation: {
-                        previous: false,
-                        addPlugin: false,
+const headerItems = {
+    previous: renderHeaderItem({
+        'iconName': 'arrow-left-icon',
+        'onclick': function (event) {
+            event.preventDefault();
+            document.dispatchEvent(
+                new CustomEvent('navigate', {
+                    detail: {
+                        state: {
+                            headerNavigation: {
+                                previous: false,
+                                addPlugin: false,
+                            }
+                        },
+                        viewName: 'list-steamapps',
                     }
-                },
-                viewName: 'list-steamapps',
-            }
-        })
-    );
-});
-
-navigation.addPlugin.addEventListener('click', function (event) {
-    event.preventDefault();
-    dialog.showOpenDialog(
-        {
-            'title': 'Open Ayria plugin package',
-            'filters': [
-                {'name': 'Ayria plugin package', extensions: ['zip', 'ayria']}
-            ]
-        },
-        function (filePath) {
-            if (!filePath) return;
-
-            installPlugin(filePath[0]);
+                })
+            );
         }
-    );
-});
+    }),
+    addPlugin: renderHeaderItem({
+        'iconName': 'plus-icon',
+        'onclick': function (event) {
+            event.preventDefault();
+            dialog.showOpenDialog(
+                {
+                    'title': 'Open Ayria plugin package',
+                    'filters': [
+                        {'name': 'Ayria plugin package', extensions: ['zip', 'ayria']}
+                    ]
+                },
+                function (filePath) {
+                    if (!filePath) return;
 
-const renderHeader = function (state) {
-    if (!state.headerNavigation) return;
-
-    Object.entries(navigation).forEach(function ([key, element]) {
-        element.setAttribute('disabled', !state.headerNavigation[key]);
-    });
+                    installPlugin(filePath[0]);
+                }
+            );
+        }
+    }),
 };
 
-module.exports = {
-    render: (state) => {
-        renderHeader(state);
-        appSlug = state.appSlug;
-    },
-};
+const renderHeader = (activeItems = []) => node(
+    'nav',
+    { 'class': 'app-header' },
+    [
+        activeItems.map(name => headerItems[name]),
+        node('div', {'class': 'app-header-logo-container'}, node(
+            'img',
+            {
+                'class': 'app-header-logo',
+                'src': './assets/ayria-logo.png',
+                'alt': 'Ayria logo'
+            }
+        ))
+    ]
+)
+
+module.exports = renderHeader;

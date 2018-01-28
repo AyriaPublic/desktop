@@ -2,7 +2,7 @@
   "name": "ayria-desktop",
   "version": "0.0.0",
   "description": "GUI Electron app for the Ayria Network Platform.",
-  "main": "src/main.js",
+  "main": "src/boot-electron.js",
   "scripts": {
     "postinstall": "electron-rebuild",
     "start": "electron .",
@@ -21,6 +21,7 @@
     "flat-cache": "^1.2.2",
     "github-slugid": "^1.0.1",
     "got": "^7.1.0",
+    "hyperapp": "^1.0.2",
     "mkdirp": "^0.5.1",
     "object.entries": "^1.0.4",
     "pify": "^3.0.0",
