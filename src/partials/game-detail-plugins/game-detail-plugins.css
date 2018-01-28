@@ -1,0 +1,33 @@
+.game-detail-plugins {
+    display: inline-flex;
+    flex-direction: column;
+    max-width: 40em;
+    font-size: 1.4em;
+}
+
+.plugin-list > li {
+    position: relative;
+    margin: 0.75em 0 0 1em;
+    list-style-type: none;
+}
+
+.plugin-list > li:first-child {
+    margin-top: 0;
+}
+
+.plugin-list > li::before {
+    display: flex;
+    position: absolute;
+    top: 0.45em;
+    left: -1em;
+    width: 0.55em;
+    height: 0.55em;
+    margin-right: 0.4em;
+    border-radius: 50%;
+    background: #c50000;
+    content: '';
+}
+
+.plugin-list > li[data-plugin-active]::before {
+    background: #00b900;
+}

@@ -4,32 +4,17 @@
 <head>
     <meta charset="utf-8">
     <title>Ayria</title>
-    <link rel="stylesheet" href="./main.css">
-
-    <link rel="import" href="./partials/app-header/app-header.html">
-
-    <link rel="import" href="./partials/game-detail/game-detail.html">
-    <link rel="import" href="./partials/list-steamapps/list-steamapps.html">
+    <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
-    <main data-main-view></main>
     <script>
-        require('./imports');
-        require('./router');
+        require('./app.js');
     </script>
     <script>
         document.dispatchEvent(
             new CustomEvent('navigate', {
-                detail: {
-                    state: {
-                        headerNavigation: {
-                            previous: false,
-                            addPlugin: false,
-                        }
-                    },
-                    viewName: 'list-steamapps',
-                }
+                detail: { viewName: 'list-steamapps' }
             })
         );
     </script>
