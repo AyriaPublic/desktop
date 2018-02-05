@@ -59,7 +59,7 @@ const renderHeader = (activeItems = []) => node(
             'img',
             {
                 'class': 'app-header-logo',
-                'src': './assets/ayria-logo.png',
+                'src': './assets/ayria-logo.svg',
                 'alt': 'Ayria logo'
             }
         ))
