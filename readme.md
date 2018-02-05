@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/AyriaPublic">
-        <img alt="" src="https://raw.githubusercontent.com/AyriaPublic/desktop/master/src/assets/ayria-logo.png" width="200">
+        <img alt="" src="https://cdn.rawgit.com/AyriaPublic/desktop/master/src/assets/ayria-logo.svg" width="180">
     </a>
     <h1 align="center">Ayria Desktop</h1>
 </p>
