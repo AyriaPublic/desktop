@@ -1,15 +1,17 @@
 'use strict';
 
 const concatStream = require('concat-stream');
-const yauzl = require('yauzl');
-const yazl = require('yazl');
+const { getGlobal } = require('electron').remote;
 const fs = require('fs');
+const slugify = require('github-slugid');
+const yaml = require('js-yaml');
+const mkdirp = require('mkdirp');
 const path = require('path');
 const R = require('ramda');
-const slugify = require('github-slugid');
-const { getGlobal } = require('electron').remote;
+const yauzl = require('yauzl');
+const yazl = require('yazl');
+
 const { pluginStore } = require('./db');
-const mkdirp = require('mkdirp');
 
 // addDefaultPluginData :: Object -> Object
 const addDefaultPluginData = R.assoc('active', true);
@@ -24,7 +26,7 @@ const upsertPluginData = function (metadata) {
 };
 
 // savePlugin :: String -> ()
-const savePlugin = R.pipe(JSON.parse, addDefaultPluginData, upsertPluginData);
+const savePlugin = R.pipe(yaml.safeLoad, addDefaultPluginData, upsertPluginData);
 
 // Extract plugin from zip archive and store in DB and FS
 // installPlugin :: String -> Promise -> ()
@@ -56,7 +58,7 @@ const installPlugin = function (pluginPath) {
                         );
                     });
                 }
-                if (file.base === 'ayria-plugin.json') {
+                if (file.base === 'ayria-plugin.yaml') {
                     zipfile.openReadStream(entry, function (error, readStream) {
                         if (error) return reject(error);
                         readStream.on('end', function () {
