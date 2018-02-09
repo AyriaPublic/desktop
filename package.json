@@ -36,14 +36,14 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "electron": "~1.7.5",
+    "electron": "~1.8.2",
     "electron-packager": "^11.0.0",
     "electron-rebuild": "^1.6.0",
     "electron-reload": "^1.2.1",
     "eslint": "^4.4.1",
     "npm-run-all": "^4.0.2",
     "semver-level-harmony": "^1.0.0",
-    "spectron": "~3.7.2"
+    "spectron": "~3.8.0"
   },
   "repository": {
     "type": "git",
