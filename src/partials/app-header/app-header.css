@@ -1,20 +1,21 @@
 .app-header {
-    background-color: #000;
     display: flex;
-    height: 5rem;
+    z-index: 10;
     position: sticky;
     top: 0;
-    z-index: 10;
+    height: 5rem;
+    background-color: rgba(20, 30, 48, .75);
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.16);
 }
 
 .app-header-logo-container {
+    display: flex;
+    z-index: -1;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: -1;
 }
 
 .app-header-logo {
@@ -23,17 +24,17 @@
 }
 
 .app-header-logo:hover {
-    filter: drop-shadow(0 0 0.3rem #1ca6df);
+    filter: drop-shadow(0 0 0.3rem var(--main-brand-color));
 }
 
 .app-header-item {
-    height: 100%;
-    width: 6rem;
-    overflow: hidden;
-    position: relative;
     display: flex;
-    justify-content: center;
+    position: relative;
     align-items: center;
+    justify-content: center;
+    width: 6rem;
+    height: 100%;
+    overflow: hidden;
 }
 
 .app-header-item img {
@@ -42,8 +43,7 @@
 }
 
 .app-header-item:active {
-    background: #1997cc;
-    color: black;
+    background: var(--main-brand-color);
 }
 
 .app-header-item[disabled=true] {
@@ -51,17 +51,17 @@
 }
 
 .app-header-item::after {
-    background: #1ca6df;
+    z-index: -1;
+    position: absolute;
     bottom: 0;
-    content: '';
-    height: 110%;
     left: 50%;
     left: -20%;
-    position: absolute;
-    transform: skewX(15deg);
-    transition: 0.36s;
     width: 0;
-    z-index: -1;
+    height: 110%;
+    transform: skewX(15deg);
+    background: var(--main-brand-color);
+    content: '';
+    transition: 0.36s;
 }
 
 .app-header-item:hover::after {
