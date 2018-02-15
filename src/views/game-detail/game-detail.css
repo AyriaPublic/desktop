@@ -14,18 +14,6 @@
     padding: 1rem;
 }
 
-.game-detail-header-back {
-    position: absolute;
-    top: 1rem;
-    left: 2rem;
-    z-index: 1;
-    cursor: pointer;
-    color: #fff;
-    font-family: monospace;
-    font-size: 3.5em;
-    font-weight: lighter;
-}
-
 .game-detail-title {
     z-index: 1;
     margin: 0;
@@ -33,24 +21,27 @@
 }
 
 .game-detail-background-wrapper {
-    -webkit-filter: blur(8px) contrast(1.1);
+    z-index: -1;
     position: absolute;
-    width: 100%;
-    height: 100%;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
 }
 
 .game-detail-background {
-    transform: scale(1.1);
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transform: scale(1.1);
+    filter: blur(6px);
+    opacity: 0.75;
 }
 
 .game-detail-launcher {
     padding: 1em;
-    background: #1997cc;
     border: 0;
-    color: #fff;
+    background: var(--main-brand-color);
+    color: inherit;
     font-weight: bold;
 }

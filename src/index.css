@@ -1,6 +1,7 @@
 /* core styling */
 @import "core-styling/main.css";
 @import "core-styling/typography.css";
+@import "core-styling/variables.css";
 
 /* views */
 @import "./views/game-detail/game-detail.css";

@@ -20,6 +20,19 @@ const getGameDirectory = function (gameData) {
         ))
 }
 
+// renderGameDetailBackground :: () -> Object
+const renderGameDetailBackground = ({ background }) => node(
+    'div',
+    { 'class': 'game-detail-background-wrapper' },
+    node(
+        'img',
+        {
+            'class': 'game-detail-background',
+            'src': background
+        }
+    ),
+);
+
 // renderGameDetailHeader :: Object -> Object
 const renderGameDetailHeader = (gameData) => node(
     'header',
@@ -29,17 +42,6 @@ const renderGameDetailHeader = (gameData) => node(
             'h1',
             { 'class': 'game-detail-title' },
             gameData.name,
-        ),
-        node(
-            'div',
-            { 'class': 'game-detail-background-wrapper' },
-            node(
-                'img',
-                {
-                    'class': 'game-detail-background',
-                    'src': gameData.background
-                }
-            ),
         ),
     ]
 );
@@ -124,6 +126,7 @@ module.exports = {
         },
         [
             appHeader(['previous', 'addPlugin']),
+            renderGameDetailBackground(state.gameDetail.appData),
             renderGameDetailHeader(state.gameDetail.appData),
             node(
                 'div',
