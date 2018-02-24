@@ -24,10 +24,10 @@ const fetchSteamappBackground = function (appId) {
     const steamApiUrl = 'http://store.steampowered.com/api';
 
     return new Promise(function (resolve, reject) {
-        got(`${steamApiUrl}/appdetails?appids=${appId}&filters=background`, {
-            json: true,
-            useElectronNet: false,
-        })
+        got(
+            `${steamApiUrl}/appdetails?appids=${appId}&filters=background`,
+            { json: true }
+        )
             .then(response => {
                 if (response.body[appId].success) {
                     resolve(response.body[appId].data);
@@ -65,7 +65,7 @@ const cacheSteamappData = function (appData) {
 
     return new Promise(function (resolve, reject) {
         got
-            .stream(appData.background, { useElectronNet: false })
+            .stream(appData.background)
             .pipe(fs.createWriteStream(appBackgroundPath, {}))
             .on('finish', function () {
                 appData.background = appBackgroundPath;
