@@ -1,7 +1,7 @@
 # Ayria plugin
 
 ## Package
-All the files for an Ayria plugin are packed in a ZIP archive file with no compression. Inside it: binary file(s) and a plugin manifest file.
+All the files for an Ayria plugin are packed in a ZIP archive file. Inside it: binary file(s) and a plugin manifest file.
 
 ## Manifest
 An example manifest:
