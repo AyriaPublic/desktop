@@ -4,7 +4,7 @@
 All the files for an Ayria plugin are packed in a ZIP archive file. Inside it: binary file(s) and a plugin manifest file.
 
 ## Manifest
-An example manifest:
+Metadata about the plugin is placed in a `ayria-plugin.yaml` file, an example manifest:
 ```yaml
 name: Kicking ninja's
 version: 5.0.3
