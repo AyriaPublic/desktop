@@ -26,7 +26,7 @@
     "mkdirp": "^0.5.1",
     "object.entries": "^1.0.4",
     "pify": "^3.0.0",
-    "pouchdb": "^6.3.4",
+    "pouchdb": "^7.0.0",
     "pouchdb-upsert": "^2.2.0",
     "ramda": "^0.25.0",
     "vdfjs": "^2.0.3",
