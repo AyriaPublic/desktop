@@ -64,6 +64,6 @@ const renderHeader = (activeItems = []) => node(
             }
         ))
     ]
-)
+);
 
 module.exports = renderHeader;

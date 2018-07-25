@@ -1,3 +1,5 @@
+'use strict';
+
 const { h: node } = require('hyperapp');
 
 // renderPlugin :: Object -> Object

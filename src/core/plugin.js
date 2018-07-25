@@ -111,12 +111,10 @@ const ensurePluginSymlink = function (gameDirectory, pluginData) {
         fs[linkMethod[process.platform]](pluginPath, gamePluginPath, function (
             error
         ) {
-            if (error) {
-                if (error && !error.message.includes('file already exists')) {
-                    reject(error);
-                }
-                resolve(gamePluginPath);
+            if (error && !error.message.includes('file already exists')) {
+                reject(error);
             }
+            resolve(gamePluginPath);
         });
     });
 };

@@ -4,7 +4,6 @@ const pify = require('pify');
 const { getGlobal } = require('electron').remote;
 const flatCache = require('flat-cache');
 const fs = pify(require('fs'), { exclude: ['createWriteStream'] });
-const slugify = require('github-slugid');
 const got = require('got');
 const { h: node } = require('hyperapp');
 const path = require('path');
@@ -45,7 +44,7 @@ const getSteamappInfo = id => (
         steamFs.getAppInfo(id),
         fetchSteamappBackground(id),
     ])
-    .then(R.mergeAll)
+        .then(R.mergeAll)
 );
 
 // Takes steamappData, downloads the background and save the data to the cache
@@ -147,7 +146,7 @@ const renderSteamapp = function (appData) {
                 ]
             )
         )
-    )
+    );
 
     function onclick (event) {
         event.preventDefault();
@@ -164,7 +163,7 @@ const renderSteamapp = function (appData) {
                 }
             })
         );
-    };
+    }
 };
 
 module.exports = {

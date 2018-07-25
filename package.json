@@ -8,7 +8,7 @@
     "start": "electron .",
     "test": "ava",
     "test:ci": "run-p test 'lint -- --max-warnings 0'",
-    "lint": "eslint src/*.js src/**/*.js test/*.js",
+    "lint": "eslint src/*.js src/**/**/*.js test/*.js",
     "pack": "run-s pack:*",
     "pack:linux": "electron-packager . --platform=linux --arch=x64",
     "pack:windows": "electron-packager . --platform=win32 --arch=x64"

@@ -17,8 +17,8 @@ const getGameDirectory = function (gameData) {
             libraryDir,
             'common',
             gameData.installDirectory
-        ))
-}
+        ));
+};
 
 // renderGameDetailBackground :: () -> Object
 const renderGameDetailBackground = ({ background }) => node(
@@ -54,8 +54,8 @@ const renderLauncher = (gameDirectory, launchConfig) => node(
         class: 'game-detail-launcher',
         onclick: function () {
             const execArgs = launchConfig['arguments']
-            ? launchConfig['arguments'].split(' ')
-            : [];
+                ? launchConfig['arguments'].split(' ')
+                : [];
 
             const bootstrapDir = path.join(process.cwd(), 'src', 'bootstrap');
             const bootstrapPath = path.join(bootstrapDir, 'Bootstrap64.exe');
@@ -121,7 +121,7 @@ module.exports = {
                                 launchConfig: state.gameDetail.appData.launch
                             })
                         });
-                    })
+                    });
             }
         },
         [
