@@ -4,6 +4,6 @@ const test = require('ava');
 const semverLevelHarmony = require('semver-level-harmony');
 const { electron, spectron } = require('../package.json').devDependencies;
 
-test.skip('electron and spectron version minor levels are the same', t =>
+test('electron and spectron version minor levels are the same', t =>
     t.true(semverLevelHarmony('minor', electron, spectron))
 );
