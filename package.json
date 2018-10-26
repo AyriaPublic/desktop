@@ -43,7 +43,7 @@
     "eslint": "^5.1.0",
     "npm-run-all": "^4.0.2",
     "semver-level-harmony": "^1.0.0",
-    "spectron": "~4.0.0"
+    "spectron": "~5.0.0"
   },
   "repository": {
     "type": "git",
