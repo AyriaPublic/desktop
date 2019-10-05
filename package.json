@@ -16,9 +16,9 @@
   "dependencies": {
     "arch": "^2.1.0",
     "binary-vdf": "^0.1.0",
-    "concat-stream": "^1.6.0",
-    "env-paths": "^1.0.0",
-    "flat-cache": "^1.2.2",
+    "concat-stream": "^2.0.0",
+    "env-paths": "^2.2.0",
+    "flat-cache": "^2.0.1",
     "github-slugid": "^1.0.1",
     "got": "^9.0.0",
     "hyperapp": "^1.0.2",
@@ -36,14 +36,14 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "electron": "~2.0.4",
-    "electron-packager": "^12.0.0",
+    "electron": "^4.2.4",
+    "electron-packager": "^13.1.1",
     "electron-rebuild": "^1.8.1",
     "electron-reload": "^1.2.1",
     "eslint": "^5.1.0",
     "npm-run-all": "^4.0.2",
     "semver-level-harmony": "^1.0.0",
-    "spectron": "~4.0.0"
+    "spectron": "^5.0.0"
   },
   "repository": {
     "type": "git",
