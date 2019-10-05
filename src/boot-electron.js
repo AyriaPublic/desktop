@@ -25,6 +25,9 @@ const createWindow = function () {
         minWidth: 896,
         minHeight: 504,
         autoHideMenuBar: true,
+        webPreferences: {
+            nodeIntegration: true,
+        },
     });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
